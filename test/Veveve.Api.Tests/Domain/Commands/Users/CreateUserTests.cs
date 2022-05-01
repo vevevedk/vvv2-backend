@@ -1,14 +1,13 @@
-using System;
-using System.Threading;
 using Veveve.Api.Domain.Commands.Users;
 using Veveve.Api.Domain.Commands.Emails;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Infrastructure.Database.Entities;
 using MediatR;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Api.Domain.Exceptions;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -24,10 +23,30 @@ public class CreateUserTests : TestBase
     }
 
     [Fact]
+    public async void CreateUser_ThrowsNotFoundException_WhenClientIdDoesntExist(){
+        // Arrange
+        var command = new CreateUser.Command(999, "Donald Trump", $"{Guid.NewGuid()}@gmail.com", false);
+
+        // Act
+        var exception = await Record.ExceptionAsync(async () => await _sut.Handle(command, default));
+
+        // Assert
+        Assert.IsType<NotFoundException>(exception);
+    }
+
+    [Fact]
     public async void CreateUser_CreatesUserWithParams()
     {
         // Arrange
-        var command = new CreateUser.Command("Donald Trump", "jhlk@asd.com", false);
+        ClientEntity client;
+        using (var context = new AppDbContext(_dbOptions))
+        {
+            client = new ClientBuilder("some client");
+            context.Clients.Add(client);
+            await context.SaveChangesAsync();
+        }
+
+        var command = new CreateUser.Command(client.Id, "Donald Trump", "jhlk@asd.com", false);
 
         // Act
         var User = await _sut.Handle(command, default);
@@ -50,7 +69,14 @@ public class CreateUserTests : TestBase
     public async void CreateUser_InvokeMediatorSendResetPasswordMail()
     {
         // Arrange
-        var command = new CreateUser.Command("Donald Trump", "fhgddfgh@asd.com", false);
+        ClientEntity client;
+        using (var context = new AppDbContext(_dbOptions))
+        {
+            client = new ClientBuilder("some client");
+            context.Clients.Add(client);
+            await context.SaveChangesAsync();
+        }
+        var command = new CreateUser.Command(client.Id, "Donald Trump", "fhgddfgh@asd.com", false);
 
         // Act
         var User = await _sut.Handle(command, default);

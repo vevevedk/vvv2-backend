@@ -1,12 +1,10 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Veveve.Api.Domain.Services;
 using MediatR;
 using Veveve.Api.Infrastructure.Database;
 using Microsoft.Extensions.Options;
 using SendGrid.Helpers.Mail;
 using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Domain.Commands.Emails;
 
@@ -47,7 +45,10 @@ public static class SendResetPasswordMail
 
             await _sendgridClient.SendEmail(dto);
 
-            await _dbContext.EmailLogs.AddAsync(new EmailLogEntity(request.email, EmailTypeEnum.ResetPassword, dto.Reference));
+            await _dbContext.EmailLogs.AddAsync(new EmailLogBuilder()
+                .WithEmail(request.email)
+                .WithEmailType(EmailTypeEnum.ResetPassword)
+                .WithReference(dto.Reference));
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -46,9 +47,11 @@ public class ResetUserPasswordTests : TestBase
         
         using (var context = new AppDbContext(_dbOptions))
         {
-            var newAcc = new UserEntity("asdasd", email);
+            var newAcc = new UserBuilder("asdasd", email)
+                .WithTestClient()
+                .Build();
             context.Users.Add(newAcc);
-            await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             Assert.Null(newAcc.ResetPasswordToken);
         }
 
@@ -75,7 +78,8 @@ public class ResetUserPasswordTests : TestBase
 
         using (var context = new AppDbContext(_dbOptions))
         {
-            var newAcc = new UserEntity("asdasd", email);
+            var newAcc = new UserBuilder("asdasd", email)
+                .WithTestClient();
             context.Users.Add(newAcc);
             await context.SaveChangesAsync();
         }

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Infrastructure.ErrorHandling;
 
-namespace Veveve.Api.Domain.Commands.Users;
+namespace Veveve.Api.Domain.Commands.Clients;
 
-public static class DeleteUser
+public static class DeleteClient
 {
     public record Command(int Id) : IRequest;
 
@@ -14,18 +14,19 @@ public static class DeleteUser
     {
         private readonly AppDbContext _dbContext;
 
-        public Handler(AppDbContext dbContext)
+        public Handler(
+            AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
         protected override async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var existingUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
-            if(existingUser == null)
-                throw new NotFoundException(ErrorCodesEnum.USER_ID_DOESNT_EXIST);    
+            var existingClient = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
+            if(existingClient == null)
+                throw new NotFoundException(ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST);    
             
-            _dbContext.Remove(existingUser);
+            _dbContext.Remove(existingClient);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

@@ -8,6 +8,7 @@ using Veveve.Api.Controllers.Users;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Infrastructure.Database.Entities;
 using Veveve.Api.Domain.Services;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Tests.Controllers;
 
@@ -24,12 +25,15 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
     public async Task CreateUser_Returns201()
     {
         // Arrange
+        ClientEntity client = await _factory.GetTestClientEntity();
+
         var email = "try54y4tre@asd.com";
         // Act
         var httpClient = _factory.CreateNewHttpClient(true);
         var response = await httpClient.PostAsync($"/api/v1/Users",
             new CreateUserRequest
             {
+                ClientId = client.Id,
                 Email = email,
                 FullName = "donald trump",
                 IsAdmin = false
@@ -49,9 +53,9 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         var resetPwToken = Guid.NewGuid();
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
-            User = new UserEntity("donald trump", "fdgdfgdfs@asd.com"){
-                ResetPasswordToken = resetPwToken
-            };
+            User = new UserBuilder("donald trump", "fdgdfgdfs@asd.com")
+                .WithTestClient()
+                .WithResetPasswordToken(resetPwToken);
 
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
@@ -80,10 +84,9 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         {
             var pwService = _factory.GetScopedServiceProvider().GetService<IPasswordService>()!;
             var pw = pwService.EncryptPassword(password);
-            User = new UserEntity("donald trump", "6345dfsg@asd.com"){
-                Password = pw.Hash,
-                Salt = pw.Salt
-            };
+            User = new UserBuilder("donald trump", "6345dfsg@asd.com")
+                .WithTestClient()
+                .WithPassword(pw.Hash, pw.Salt);
 
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
@@ -111,7 +114,8 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         UserEntity User;
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
-            User = new UserEntity("donald trump", "dfsgsfdgdf@asd.com");
+            User = new UserBuilder("donald trump", "dfsgsfdgdf@asd.com")
+                .WithTestClient();
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
         }
@@ -136,7 +140,8 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         UserEntity User;
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
-            User = new UserEntity("donald trump", "324141324@asd.com");
+            User = new UserBuilder("donald trump", "324141324@asd.com")
+                .WithTestClient();
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
         }
@@ -158,37 +163,14 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
     }
 
     [Fact]
-    public async Task UpdateUserIsAdmin_Returns204()
-    {
-        // Arrange
-        UserEntity User;
-        using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
-        {
-            User = new UserEntity("donald trump", "sdfgsdfgdsf@asd.com");
-            appDbContext.Users.Add(User);
-            await appDbContext.SaveChangesAsync();
-        }
-
-        // Act
-        var httpClient = _factory.CreateNewHttpClient(true);
-        var response = await httpClient.PutAsync($"/api/v1/Users/{User.Id}/updateIsAdmin",
-            new UpdateUserIsAdminRequest
-            {
-                IsAdmin = true
-            }.ToHttpStringContent());
-
-        // Assert
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-    }
-
-    [Fact]
     public async Task DeleteUser_Returns204()
     {
         // Arrange
         UserEntity User;
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
-            User = new UserEntity("donald trump", "sdfgsdfgdsf@asd.com");
+            User = new UserBuilder("donald trump", "sdfgsdfgdsf@asd.com")
+                .WithTestClient();
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
         }

@@ -5,16 +5,13 @@ namespace Veveve.Api.Infrastructure.Database.Entities;
 
 public class EmailLogEntity : BaseEntity
 {
-    public EmailLogEntity(string email, EmailTypeEnum emailType, Guid reference)
+    public EmailLogEntity()
     {
-        Email = email;
-        EmailType = emailType;
-        Reference = reference;
         Event = EmailEventEnum.Registered;
     }
 
     [Required]
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
 
     /// <summary>
     /// This is used for SendGrid callbacks to update a row with a new status

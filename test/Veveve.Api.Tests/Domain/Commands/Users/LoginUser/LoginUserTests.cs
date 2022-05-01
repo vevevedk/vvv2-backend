@@ -8,6 +8,7 @@ using Veveve.Api.Infrastructure.ErrorHandling;
 using MediatR;
 using NSubstitute;
 using Xunit;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -25,7 +26,7 @@ public class LoginUserTests : TestBase
     }
 
     [Fact]
-    public async void LoginUser_ThrowsBusinessRuleException_WhenEmailDoesntExist()
+    public async void Loginuser_ThrowsBusinessRuleException_WhenEmailDoesntExist()
     {
         // Arrange
         var command = new LoginUser.Command("asdasd@gmail.com", "somepass");
@@ -38,13 +39,14 @@ public class LoginUserTests : TestBase
     }
 
     [Fact]
-    public async void LoginUser_ThrowsBusinessRuleException_WhenUserHasNoPassword()
+    public async void Loginuser_ThrowsBusinessRuleException_WhenUserHasNoPassword()
     {
         // Arrange
         var command = new LoginUser.Command("asdasd@gmail.com", "somepass");
         using (var context = new AppDbContext(_dbOptions))
         {
-            context.Users.Add(new UserEntity("some name", command.Email));
+            context.Users.Add(new UserBuilder("some name", command.Email)
+                .WithTestClient());
             await context.SaveChangesAsync();
         }
 
@@ -53,21 +55,20 @@ public class LoginUserTests : TestBase
 
         // Assert
         Assert.IsType<BusinessRuleException>(exception);
-        Assert.Equal(ErrorCodesEnum.User_LOGIN_EMAIL_OR_PASSWORD_INVALID, ((BusinessRuleException)exception).ErrorCode);
+        Assert.Equal(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID, ((BusinessRuleException)exception).ErrorCode);
     }
 
     [Fact]
-    public async void LoginUser_ThrowsBusinessRuleException_WhenPasswordIsInvalid()
+    public async void Loginuser_ThrowsBusinessRuleException_WhenPasswordIsInvalid()
     {
         // Arrange
         var command = new LoginUser.Command("asdasd@gmail.com", "somepass");
         using (var context = new AppDbContext(_dbOptions))
         {
             var pw = _passwordService.EncryptPassword("someotherpass");
-            context.Users.Add(new UserEntity("some name", command.Email){
-                Password = pw.Hash,
-                Salt = pw.Salt
-            });
+            context.Users.Add(new UserBuilder("some name", command.Email)
+                .WithPassword(pw.Hash, pw.Salt)
+                .WithTestClient());
             await context.SaveChangesAsync();
         }
 
@@ -76,21 +77,20 @@ public class LoginUserTests : TestBase
 
         // Assert
         Assert.IsType<BusinessRuleException>(exception);
-        Assert.Equal(ErrorCodesEnum.User_LOGIN_EMAIL_OR_PASSWORD_INVALID, ((BusinessRuleException)exception).ErrorCode);
+        Assert.Equal(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID, ((BusinessRuleException)exception).ErrorCode);
     }
 
     [Fact]
-    public async void LoginUser_ReturnsJwtToken_WhenSuccesful()
+    public async void Loginuser_ReturnsJwtToken_WhenSuccesful()
     {
         // Arrange
         var command = new LoginUser.Command("asdasd@gmail.com", "somepass");
         using (var context = new AppDbContext(_dbOptions))
         {
             var pw = _passwordService.EncryptPassword(command.Password);
-            context.Users.Add(new UserEntity("some name", command.Email){
-                Password = pw.Hash,
-                Salt = pw.Salt
-            });
+            context.Users.Add(new UserBuilder("some name", command.Email)
+                .WithPassword(pw.Hash, pw.Salt)
+                .WithTestClient());
             await context.SaveChangesAsync();
         }
 

@@ -7,20 +7,22 @@ namespace Veveve.Api.Infrastructure.Database.Entities;
 
 public class UserEntity : BaseEntity
 {
-    public UserEntity(string fullName, string email)
+    public UserEntity()
     {
-        FullName = fullName;
-        Email = email;
         Claims = new List<UserClaimEntity>();
     }
 
     [Required]
-    public string FullName { get; set; }
+    public string FullName { get; set; } = null!;
     [Required]
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
     public string? Password { get; set; }
     public byte[]? Salt { get; set; }
     public Guid? ResetPasswordToken { get; set; }
+    [Required]
+    public int ClientId { get; set; }
+
+    public ClientEntity Client { get; set; } = null!;
 
     public ICollection<UserClaimEntity> Claims { get; set; }
 

@@ -22,13 +22,24 @@ public enum ErrorCodesEnum
 
     // ==== User 10000-20000 ============
     [Description("The provided email or password is incorrect")]
-    User_LOGIN_EMAIL_OR_PASSWORD_INVALID = 10101,
+    USER_LOGIN_EMAIL_OR_PASSWORD_INVALID = 10101,
     [Description("The reset password token is invalid. Might have already been used")]
-    User_RESETPASSWORD_TOKEN_INVALID = 10201,
+    USER_RESETPASSWORD_TOKEN_INVALID = 10201,
     [Description("The provided email already exists and cannot be used")]
-    User_EMAIL_ALREADY_EXIST = 10301,
+    USER_EMAIL_ALREADY_EXIST = 10301,
     [Description("The provided email does not exist")]
-    User_EMAIL_DOESNT_EXIST = 10302,
+    USER_EMAIL_DOESNT_EXIST = 10302,
     [Description("The User doesn't exist")]
-    User_ID_DOESNT_EXIST = 10303,
+    USER_ID_DOESNT_EXIST = 10303,
+
+
+    // ==== Client 20000-30000 ============
+    [Description("The User doesn't exist")]
+    CLIENT_ID_DOESNT_EXIST = 20101,
+
+    // ==== Account 30000-40000 ============
+    [Description("The User doesn't exist")]
+    ACCOUNT_ID_DOESNT_EXIST = 20101,
+    [Description("The provided google ads id already exists")]
+    ACCOUNT_GOOGLEADSID_ALREADY_EXIST = 20301,
 }

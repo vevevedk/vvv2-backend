@@ -6,4 +6,6 @@ public class CreateUserRequest : BaseUserRequest
 {
     [Required]
     public bool IsAdmin { get; set; }
+    [Required]
+    public int ClientId { get; set; }
 }

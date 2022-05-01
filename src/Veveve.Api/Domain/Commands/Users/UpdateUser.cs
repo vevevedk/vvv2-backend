@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Infrastructure.ErrorHandling;
 using Npgsql;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Domain.Commands.Users;
 
 public static class UpdateUser
 {
-    public record Command(int Id, string FullName, string Email) : IRequest<UserEntity>;
+    public record Command(int Id, int? ClientId, string FullName, string Email, bool? IsAdmin) : IRequest<UserEntity>;
 
     public class Handler : IRequestHandler<Command, UserEntity>
     {
@@ -32,10 +33,28 @@ public static class UpdateUser
                 .Include(x => x.Claims)
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
             if(existingUser == null)
-                throw new NotFoundException(ErrorCodesEnum.User_ID_DOESNT_EXIST);    
+                throw new NotFoundException(ErrorCodesEnum.USER_ID_DOESNT_EXIST);    
             
-            existingUser.FullName = request.FullName;
-            existingUser.Email = request.Email;
+            var builder = new UserBuilder(existingUser)
+                .WithFullName(request.FullName)
+                .WithEmail(request.Email);
+
+            if(request.ClientId.HasValue)
+            {
+                var group = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id == request.ClientId);
+                if(group == null)
+                    throw new NotFoundException(ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST);
+                builder.WithClient(group);
+            }
+            if(request.IsAdmin.HasValue)
+            {
+                var existingAdminClaim = existingUser.Claims.FirstOrDefault(x => x.ClaimType == ClaimTypeEnum.Admin);
+
+                if(request.IsAdmin == true && existingAdminClaim == null)
+                    builder.WithClaim(new UserClaimBuilder(ClaimTypeEnum.Admin));
+                else if(request.IsAdmin == false && existingAdminClaim != null)
+                    builder.RemoveClaim(existingAdminClaim);
+            }
 
             try
             {
@@ -46,7 +65,7 @@ public static class UpdateUser
                if (e.InnerException is PostgresException ex &&
                     ex.SqlState == "23505" && 
                     ex.ConstraintName?.Contains(nameof(UserEntity.Email)) == true)
-                    throw new ConflictException(ErrorCodesEnum.User_EMAIL_ALREADY_EXIST);
+                    throw new ConflictException(ErrorCodesEnum.USER_EMAIL_ALREADY_EXIST);
 
                 throw;
             }

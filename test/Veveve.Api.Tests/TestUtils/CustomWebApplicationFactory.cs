@@ -12,6 +12,7 @@ using Veveve.Api.Infrastructure.Authorization;
 using Veveve.Api.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Linq;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Tests.TestUtils;
 /// <summary>
@@ -28,8 +29,8 @@ public class CustomWebApplicationFactory<TStartup>
     public string GenerateJwtToken(UserEntity? User = null)
     {
         // will not be written to db. this is just a fake User object to create a token.
-        var acc = new UserEntity("Donald Trump", "donaltrump@gmail.com");
-        acc.Claims.Add(new UserClaimEntity(ClaimTypeEnum.Admin));
+        var acc = new UserBuilder("Donald Trump", "donaltrump@gmail.com")
+            .WithClaim(new UserClaimEntity(ClaimTypeEnum.Admin));
         var jwtTokenHelper = Services.CreateScope().ServiceProvider.GetService<IJwtTokenHelper>()!;
         var token = jwtTokenHelper.GenerateJwtToken(acc);
         return token;
@@ -44,6 +45,19 @@ public class CustomWebApplicationFactory<TStartup>
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {GenerateJwtToken()}");
 
         return httpClient;
+    }
+
+    public async Task<ClientEntity> GetTestClientEntity()
+    {
+        ClientEntity client;
+        using (var appDbContext = GetScopedServiceProvider().GetService<AppDbContext>()!)
+        {
+            client = new ClientBuilder("testclient");
+            appDbContext.Clients.Add(client);
+            await appDbContext.SaveChangesAsync();
+        }
+
+        return client;
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

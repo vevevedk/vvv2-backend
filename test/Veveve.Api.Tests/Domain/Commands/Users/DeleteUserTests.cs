@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -38,7 +39,8 @@ public class DeleteUserTests : TestBase
         UserEntity User;
         using (var context = new AppDbContext(_dbOptions))
         {
-            User = new UserEntity("asdasd", "jkh214h21@mail.com");
+            User = new UserBuilder("asdasd", "jkh214h21@mail.com")
+                .WithTestClient();
             context.Users.Add(User);
             await context.SaveChangesAsync();
         }

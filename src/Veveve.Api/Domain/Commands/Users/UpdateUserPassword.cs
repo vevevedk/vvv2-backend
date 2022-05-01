@@ -29,7 +29,7 @@ public static class UpdateUserPassword
         {
             var User = await _dbContext.Users.FirstOrDefaultAsync(x => x.ResetPasswordToken == request.ResetPasswordToken);
             if (User == null)
-                throw new BusinessRuleException(ErrorCodesEnum.User_RESETPASSWORD_TOKEN_INVALID);
+                throw new BusinessRuleException(ErrorCodesEnum.USER_RESETPASSWORD_TOKEN_INVALID);
 
             var hashSalt = _passwordService.EncryptPassword(request.Password);
             User.Password = hashSalt.Hash;

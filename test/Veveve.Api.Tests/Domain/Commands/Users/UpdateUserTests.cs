@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -21,10 +22,29 @@ public class UpdateUserTests : TestBase
     }
 
     [Fact]
+    public async void UpdateUser_ThrowsNotFoundException_WhenClientIdDoesntExist(){
+        // Arrange
+        var command = new UpdateUser.Command(333, 999, "Donald Trump", $"{Guid.NewGuid()}@gmail.com", null);
+
+        // Act
+        var exception = await Record.ExceptionAsync(async () => await _sut.Handle(command, default));
+
+        // Assert
+        Assert.IsType<NotFoundException>(exception);
+    }
+
+    [Fact]
     public async void UpdateUser_ThrowsNotFoundException_WhenIdDoesntExist()
     {
         // Arrange
-        var command = new UpdateUser.Command(123, "Donald Trump", "fhgddfgh@asd.com");
+        ClientEntity client;
+        using (var context = new AppDbContext(_dbOptions))
+        {
+            client = new ClientBuilder("some client");
+            context.Clients.Add(client);
+            await context.SaveChangesAsync();
+        }
+        var command = new UpdateUser.Command(client.Id, 123, "Donald Trump", "fhgddfgh@asd.com", null);
 
         // Act
         var exception = await Record.ExceptionAsync(async () => await _sut.Handle(command, default));
@@ -40,11 +60,12 @@ public class UpdateUserTests : TestBase
         UserEntity User;
         using (var context = new AppDbContext(_dbOptions))
         {
-            User = new UserEntity("asdasd", "jkh214h21@mail.com");
+            User = new UserBuilder("asdasd", "jkh214h21@mail.com")
+                .WithTestClient();
             context.Users.Add(User);
             await context.SaveChangesAsync();
         }
-        var command = new UpdateUser.Command(User.Id, "Donald Trump", "jhlk@asd.com");
+        var command = new UpdateUser.Command(User.ClientId, User.Id, "Donald Trump", "jhlk@asd.com", null);
 
         // Act
         await _sut.Handle(command, default);

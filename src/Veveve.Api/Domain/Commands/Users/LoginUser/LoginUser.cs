@@ -34,13 +34,13 @@ public static class LoginUser
                 .Include(x => x.Claims)
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
             if (User == null)
-                throw new BusinessRuleException(ErrorCodesEnum.User_LOGIN_EMAIL_OR_PASSWORD_INVALID);
+                throw new BusinessRuleException(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID);
 
             if (string.IsNullOrEmpty(User.Password))
-                throw new BusinessRuleException(ErrorCodesEnum.User_LOGIN_EMAIL_OR_PASSWORD_INVALID);
+                throw new BusinessRuleException(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID);
 
             if (_passwordService.VerifyPassword(request.Password, User.Salt!, User.Password) == false)
-                throw new BusinessRuleException(ErrorCodesEnum.User_LOGIN_EMAIL_OR_PASSWORD_INVALID);
+                throw new BusinessRuleException(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID);
 
             var token = _jwtTokenHelper.GenerateJwtToken(User);
             return new LoginUserResult(User, token);

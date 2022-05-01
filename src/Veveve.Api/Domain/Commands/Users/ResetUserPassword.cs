@@ -32,7 +32,7 @@ public static class ResetUserPassword
         {
             var User = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
             if (User == null)
-                throw new NotFoundException(ErrorCodesEnum.User_EMAIL_DOESNT_EXIST);
+                throw new NotFoundException(ErrorCodesEnum.USER_EMAIL_DOESNT_EXIST);
 
             var resetToken = Guid.NewGuid();
             User.ResetPasswordToken = resetToken;

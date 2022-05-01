@@ -8,6 +8,7 @@ public class Appsettings
     public SendGridSettings SendGrid { get; set; }
     public AuthorizationSettings Authorization { get; set; }
     public DefaultAdminUser[] DefaultAdminUsers { get; set; } = new DefaultAdminUser[0];
+    public string DefaultAdminClientName { get; set; }
 }
 
 public class ConnectionStrings

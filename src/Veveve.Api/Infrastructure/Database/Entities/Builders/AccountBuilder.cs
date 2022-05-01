@@ -1,0 +1,32 @@
+namespace Veveve.Api.Infrastructure.Database.Entities.Builders;
+
+public class AccountBuilder
+{
+    private AccountEntity _object;
+
+    public AccountBuilder()
+    {
+        _object = new AccountEntity();
+    }
+
+    public AccountBuilder(AccountEntity existingAccount)
+    {
+        _object = existingAccount;
+    }
+
+    public AccountBuilder WithGoogleAdsAccount(int googleAdsAccountId, string googleAdsAccountName)
+    {
+        _object.GoogleAdsAccountId = googleAdsAccountId;
+        _object.GoogleAdsAccountName = googleAdsAccountName;
+        return this;
+    }
+
+    public static implicit operator AccountEntity(AccountBuilder builder) => builder.Build();
+
+    public AccountEntity Build()
+    {
+        if(_object.GoogleAdsAccountId == 0 || _object.GoogleAdsAccountName == null)
+            throw new InvalidOperationException("GoogleAdsAccountId and GoogleAdsAccountName must be set.");
+        return _object;
+    }
+}

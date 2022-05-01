@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<AccountEntity> Accounts => Set<AccountEntity>();
+    public DbSet<ClientEntity> Clients => Set<ClientEntity>();
     public DbSet<UserClaimEntity> UserClaims => Set<UserClaimEntity>();
     public DbSet<EmailLogEntity> EmailLogs => Set<EmailLogEntity>();
 
@@ -43,6 +45,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<UserEntity>().HasIndex(b => b.Email).IsUnique();
+        modelBuilder.Entity<AccountEntity>().HasIndex(b => b.ClientId).IsUnique();
         modelBuilder.Entity<EmailLogEntity>().HasIndex(b => b.Reference).IsUnique();
     }
 }

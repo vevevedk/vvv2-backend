@@ -5,7 +5,9 @@ namespace Veveve.Api.Infrastructure.Database.Entities;
 
 public class UserClaimEntity : BaseEntity
 {
-    public UserClaimEntity(ClaimTypeEnum claimType)
+    public UserClaimEntity(){}
+
+    public UserClaimEntity(ClaimTypeEnum claimType) : this()
     {
         ClaimType = claimType;
     }

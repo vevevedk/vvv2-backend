@@ -19,10 +19,14 @@ namespace Veveve.Api.Controllers.Users;
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IJwtTokenHelper _jwtTokenHelper;
 
-    public UsersController(IMediator mediator)
+    public UsersController(
+        IMediator mediator,
+        IJwtTokenHelper jwtTokenHelper)
     {
         _mediator = mediator;
+        _jwtTokenHelper = jwtTokenHelper;
     }
 
     /// <summary>
@@ -33,10 +37,10 @@ public class UsersController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
-    [SwaggerErrorCodes(HttpStatusCode.Conflict, ErrorCodesEnum.User_EMAIL_ALREADY_EXIST)]
+    [SwaggerErrorCodes(HttpStatusCode.Conflict, ErrorCodesEnum.USER_EMAIL_ALREADY_EXIST)]
     public async Task<ActionResult<UserResponse>> CreateUser([FromBody] CreateUserRequest body)
     {
-        var User = await _mediator.Send(new CreateUser.Command(body.FullName, body.Email, body.IsAdmin));
+        var User = await _mediator.Send(new CreateUser.Command(body.ClientId, body.FullName, body.Email, body.IsAdmin));
         return Created("", new UserResponse(User));
     }
 
@@ -48,32 +52,22 @@ public class UsersController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
-    [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.User_ID_DOESNT_EXIST)]
-    [SwaggerErrorCodes(HttpStatusCode.Conflict, ErrorCodesEnum.User_EMAIL_ALREADY_EXIST)]
+    [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.USER_ID_DOESNT_EXIST)]
+    [SwaggerErrorCodes(HttpStatusCode.Conflict, ErrorCodesEnum.USER_EMAIL_ALREADY_EXIST)]
     public async Task<ActionResult<UserResponse>> UpdateUser(
         [FromRoute] int id,
         [FromBody] UpdateUserRequest body)
     {
-        var User = await _mediator.Send(new UpdateUser.Command(id, body.FullName, body.Email));
+        if(!_jwtTokenHelper.HasAdminClaim() && (
+            body.IsAdmin.HasValue ||
+            body.ClientId.HasValue))
+            return StatusCode((int)HttpStatusCode.Forbidden, $"You must have admin rights to update the following properties: {nameof(body.IsAdmin)}, {nameof(body.ClientId)}");
+        
+        if(_jwtTokenHelper.GetUserId() != id && !_jwtTokenHelper.HasAdminClaim())
+            return StatusCode((int)HttpStatusCode.Forbidden, $"You can only update your own account, unless you're an admin");
+            
+        var User = await _mediator.Send(new UpdateUser.Command(id, body.ClientId, body.FullName, body.Email, body.IsAdmin));
         return Ok(new UserResponse(User));
-    }
-
-
-    /// <summary>
-    /// Update an User to have admin permissions
-    /// </summary>
-    [Authorize(AuthPolicies.Admin)]
-    [HttpPut("{id}/updateIsAdmin", Name = nameof(UpdateUserIsAdmin))]
-    [Produces("application/json")]
-    [Consumes("application/json")]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.User_ID_DOESNT_EXIST)]
-    public async Task<IActionResult> UpdateUserIsAdmin(
-        [FromRoute] int id,
-        [FromBody] UpdateUserIsAdminRequest body)
-    {
-        await _mediator.Send(new UpdateUserIsAdmin.Command(id, body.IsAdmin));
-        return NoContent();
     }
 
     /// <summary>
@@ -97,7 +91,7 @@ public class UsersController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
-    [SwaggerErrorCodes(HttpStatusCode.UnprocessableEntity, ErrorCodesEnum.User_LOGIN_EMAIL_OR_PASSWORD_INVALID)]
+    [SwaggerErrorCodes(HttpStatusCode.UnprocessableEntity, ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID)]
     public async Task<ActionResult<LoginResponse>> LoginUser([FromBody] LoginUserRequest body)
     {
         var loginResult = await _mediator.Send(new LoginUser.Command(body.Email, body.Password));
@@ -130,7 +124,7 @@ public class UsersController : ControllerBase
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [SwaggerErrorCodes(HttpStatusCode.UnprocessableEntity, ErrorCodesEnum.User_RESETPASSWORD_TOKEN_INVALID)]
+    [SwaggerErrorCodes(HttpStatusCode.UnprocessableEntity, ErrorCodesEnum.USER_RESETPASSWORD_TOKEN_INVALID)]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UpdateUserPasswordRequest body)
     {
         await _mediator.Send(new UpdateUserPassword.Command(body.ResetPasswordToken, body.Password));
@@ -143,7 +137,7 @@ public class UsersController : ControllerBase
     [Authorize(AuthPolicies.Admin)]
     [HttpDelete("{id}", Name = nameof(DeleteUser))]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.User_ID_DOESNT_EXIST)]
+    [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.USER_ID_DOESNT_EXIST)]
     public async Task<ActionResult> DeleteUser(
         [FromRoute] int id)
     {

@@ -6,12 +6,13 @@ using Veveve.Api.Domain.Commands.Emails;
 using Npgsql;
 using Veveve.Api.Domain.Exceptions;
 using Veveve.Api.Infrastructure.ErrorHandling;
+using Veveve.Api.Infrastructure.Database.Entities.Builders;
 
 namespace Veveve.Api.Domain.Commands.Users;
 
 public static class CreateUser
 {
-    public record Command(string FullName, string Email, bool IsAdmin) : IRequest<UserEntity>;
+    public record Command(int ClientId, string FullName, string Email, bool IsAdmin) : IRequest<UserEntity>;
 
     public class Handler : IRequestHandler<Command, UserEntity>
     {
@@ -28,12 +29,18 @@ public static class CreateUser
 
         public async Task<UserEntity> Handle(Command request, CancellationToken cancellationToken)
         {
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id == request.ClientId);
+            if (client == null)
+                throw new NotFoundException(ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST);
 
-            var newUser = new UserEntity(request.FullName, request.Email);
-            newUser.ResetPasswordToken = Guid.NewGuid();
-            newUser.Claims.Add(new UserClaimEntity(ClaimTypeEnum.User));
+            var builder = new UserBuilder(request.FullName, request.Email)
+                .WithClient(client)
+                .WithResetPasswordToken(Guid.NewGuid())
+                .WithClaim(new UserClaimBuilder(ClaimTypeEnum.User));
             if(request.IsAdmin)
-                newUser.Claims.Add(new UserClaimEntity(ClaimTypeEnum.Admin));
+                builder.WithClaim(new UserClaimBuilder(ClaimTypeEnum.Admin));
+
+            var newUser = builder.Build();
 
             await _dbContext.Users.AddAsync(newUser);
 
@@ -46,13 +53,13 @@ public static class CreateUser
                 if (e.InnerException is PostgresException ex &&
                     ex.SqlState == "23505" && 
                     ex.ConstraintName?.Contains(nameof(UserEntity.Email)) == true)
-                    throw new ConflictException(ErrorCodesEnum.User_EMAIL_ALREADY_EXIST);
+                    throw new ConflictException(ErrorCodesEnum.USER_EMAIL_ALREADY_EXIST);
 
                 throw;
             }
 
-            await _mediator.Send(new SendResetPasswordMail.Command(request.Email, request.FullName, newUser.ResetPasswordToken.Value));
-            return newUser;
+            await _mediator.Send(new SendResetPasswordMail.Command(request.Email, request.FullName, newUser.ResetPasswordToken!.Value));
+            return builder;
         }
     }
 }
