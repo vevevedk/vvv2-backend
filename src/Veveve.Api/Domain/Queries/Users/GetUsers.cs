@@ -10,7 +10,7 @@ namespace Veveve.Api.Domain.Queries.Users;
 
 public static class GetUsers
 {
-    public record Query() : IRequest<IEnumerable<UserEntity>>;
+    public record Query(int ClientId) : IRequest<IEnumerable<UserEntity>>;
 
     public class Handler : IRequestHandler<Query, IEnumerable<UserEntity>>
     {
@@ -25,6 +25,7 @@ public static class GetUsers
         {
             var Users = await _dbContext.Users
                 .AsNoTracking()
+                .Where(x => x.ClientId == request.ClientId)
                 .ToArrayAsync();
             return Users;
         }

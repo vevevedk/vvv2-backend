@@ -11,7 +11,7 @@ namespace Veveve.Api.Domain.Commands.Accounts;
 
 public static class CreateAccount
 {
-    public record Command(int GoogleAdsAccountId, string GoogleAdsAccountName) : IRequest<AccountEntity>;
+    public record Command(int ClientId, int GoogleAdsAccountId, string GoogleAdsAccountName) : IRequest<AccountEntity>;
 
     public class Handler : IRequestHandler<Command, AccountEntity>
     {
@@ -25,8 +25,13 @@ public static class CreateAccount
 
         public async Task<AccountEntity> Handle(Command request, CancellationToken cancellationToken)
         {
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id == request.ClientId);
+            if (client == null)
+                throw new NotFoundException(ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST);
+
             var newAccount = new AccountBuilder()
                 .WithGoogleAdsAccount(request.GoogleAdsAccountId, request.GoogleAdsAccountName)
+                .WithClient(client)
                 .Build();
             await _dbContext.Accounts.AddAsync(newAccount);
 

@@ -39,7 +39,7 @@ public enum ErrorCodesEnum
 
     // ==== Account 30000-40000 ============
     [Description("The User doesn't exist")]
-    ACCOUNT_ID_DOESNT_EXIST = 20101,
+    ACCOUNT_ID_DOESNT_EXIST = 30101,
     [Description("The provided google ads id already exists")]
-    ACCOUNT_GOOGLEADSID_ALREADY_EXIST = 20301,
+    ACCOUNT_GOOGLEADSID_ALREADY_EXIST = 30302,
 }

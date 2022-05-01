@@ -21,6 +21,13 @@ public class AccountBuilder
         return this;
     }
 
+    public AccountBuilder WithClient(ClientEntity client)
+    {
+        _object.ClientId = client.Id;
+        _object.Client = client;
+        return this;
+    }
+    
     public static implicit operator AccountEntity(AccountBuilder builder) => builder.Build();
 
     public AccountEntity Build()
