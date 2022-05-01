@@ -17,7 +17,7 @@ Hosted at:
 - Serilog with minimal request-logging
 - Swagger UI at `/index.html`.
 - Entity Framework and the code-first principle with migrations.
-- Account API with login, reset password, update password etc.
+- User API with login, reset password, update password etc.
 - Bearer-token Authorization with policies
 - SendGrid integration for sending emails (including en email log and SendGrid webhooks for email delivery status updates)
 - Test-project with a few example tests

@@ -13,7 +13,7 @@ namespace Veveve.Api.Infrastructure.Authorization;
 
 public interface IJwtTokenHelper
 {
-    string GenerateJwtToken(AccountEntity account);
+    string GenerateJwtToken(UserEntity User);
     string GetEmail(JwtSecurityToken token);
 }
 
@@ -36,15 +36,15 @@ public class JwtTokenHelper : IJwtTokenHelper
     public string GetEmail(JwtSecurityToken token) =>
         token.Claims.First(c => c.Type == CustomClaimTypes.Email).Value as string;
 
-    public string GenerateJwtToken(AccountEntity account)
+    public string GenerateJwtToken(UserEntity User)
     {
-        _logger.LogInformation("Generating jwt token for account {0}", account.Id);
+        _logger.LogInformation("Generating jwt token for User {0}", User.Id);
 
         var claims = new Dictionary<string, object>(){
-            {CustomClaimTypes.Email, account.Email},
-            {CustomClaimTypes.FullName, account.FullName}
+            {CustomClaimTypes.Email, User.Email},
+            {CustomClaimTypes.FullName, User.FullName}
         };
-        if(account.HasAdminClaim())
+        if(User.HasAdminClaim())
             claims.Add(CustomClaimTypes.IsAdmin, true);
 
         var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authSettings.JwtKey));

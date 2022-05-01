@@ -3,7 +3,7 @@ using Veveve.Api.Infrastructure.Database;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace Veveve.Api.Tests.Domain.Commands.Accounts;
+namespace Veveve.Api.Tests.Domain.Commands.Users;
 
 public class TestBase : IDisposable
 {

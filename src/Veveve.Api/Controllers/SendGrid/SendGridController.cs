@@ -36,7 +36,7 @@ public class SendGridController : ControllerBase
         if (eventEnum == null)
             return Ok(); // not something we are tracking.
 
-        var account = await _mediator.Send(new UpdateEmailLog.Command(latestEvent.Reference, eventEnum.Value));
+        var User = await _mediator.Send(new UpdateEmailLog.Command(latestEvent.Reference, eventEnum.Value));
         return Ok();
     }
 }

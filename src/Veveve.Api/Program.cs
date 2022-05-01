@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MediatR;
-using Veveve.Api.Domain.Commands.Accounts;
+using Veveve.Api.Domain.Commands.Users;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Domain.Services;
 using SendGrid;
@@ -65,7 +65,7 @@ if (app.Environment.EnvironmentName != "Testing") // dont run this for integrati
         var dbContext = scope.ServiceProvider.GetService<AppDbContext>()!;
         var mediator = scope.ServiceProvider.GetService<IMediator>()!;
         await dbContext.Database.MigrateAsync();
-        // await mediator.Send(new EnsureDefaultAdminAccounts.Command());
+        // await mediator.Send(new EnsureDefaultAdminUsers.Command());
     }
 }
 

@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Veveve.Api.Infrastructure.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +15,8 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<AccountEntity> Accounts => Set<AccountEntity>();
-    public DbSet<AccountClaimEntity> AccountClaims => Set<AccountClaimEntity>();
+    public DbSet<UserEntity> Users => Set<UserEntity>();
+    public DbSet<UserClaimEntity> UserClaims => Set<UserClaimEntity>();
     public DbSet<EmailLogEntity> EmailLogs => Set<EmailLogEntity>();
 
     public override int SaveChanges() => SaveChangesAsync().Result;
@@ -36,8 +32,6 @@ public class AppDbContext : DbContext
         {
             if (entityEntry.State == EntityState.Added)
                 ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.UtcNow;
-
-            // In any case we always want to set the properties
             ((BaseEntity)entityEntry.Entity).LastModifiedDate = DateTime.UtcNow;
         }
 
@@ -48,7 +42,7 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AccountEntity>().HasIndex(b => b.Email).IsUnique();
+        modelBuilder.Entity<UserEntity>().HasIndex(b => b.Email).IsUnique();
         modelBuilder.Entity<EmailLogEntity>().HasIndex(b => b.Reference).IsUnique();
     }
 }

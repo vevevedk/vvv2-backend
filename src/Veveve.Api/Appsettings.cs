@@ -7,7 +7,7 @@ public class Appsettings
     public ConnectionStrings ConnectionStrings { get; set; }
     public SendGridSettings SendGrid { get; set; }
     public AuthorizationSettings Authorization { get; set; }
-    public DefaultAdminAccount[] DefaultAdminAccounts { get; set; } = new DefaultAdminAccount[0];
+    public DefaultAdminUser[] DefaultAdminUsers { get; set; } = new DefaultAdminUser[0];
 }
 
 public class ConnectionStrings
@@ -48,7 +48,7 @@ public class AuthorizationSettings
     public int ExpirationInSeconds { get; set; }
 }
 
-public class DefaultAdminAccount
+public class DefaultAdminUser
 {
     public string FullName { get; set; }
     public string Email { get; set; }

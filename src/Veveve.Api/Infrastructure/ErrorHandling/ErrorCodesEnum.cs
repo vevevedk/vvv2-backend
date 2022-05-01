@@ -20,15 +20,15 @@ public enum ErrorCodesEnum
     [Description("The property {0} is in an incorrect format")]
     GENERIC_PROPERTY_BAD_FORMAT = 105000,
 
-    // ==== Account 10000-20000 ============
+    // ==== User 10000-20000 ============
     [Description("The provided email or password is incorrect")]
-    ACCOUNT_LOGIN_EMAIL_OR_PASSWORD_INVALID = 10101,
+    User_LOGIN_EMAIL_OR_PASSWORD_INVALID = 10101,
     [Description("The reset password token is invalid. Might have already been used")]
-    ACCOUNT_RESETPASSWORD_TOKEN_INVALID = 10201,
+    User_RESETPASSWORD_TOKEN_INVALID = 10201,
     [Description("The provided email already exists and cannot be used")]
-    ACCOUNT_EMAIL_ALREADY_EXIST = 10301,
+    User_EMAIL_ALREADY_EXIST = 10301,
     [Description("The provided email does not exist")]
-    ACCOUNT_EMAIL_DOESNT_EXIST = 10302,
-    [Description("The account doesn't exist")]
-    ACCOUNT_ID_DOESNT_EXIST = 10303,
+    User_EMAIL_DOESNT_EXIST = 10302,
+    [Description("The User doesn't exist")]
+    User_ID_DOESNT_EXIST = 10303,
 }

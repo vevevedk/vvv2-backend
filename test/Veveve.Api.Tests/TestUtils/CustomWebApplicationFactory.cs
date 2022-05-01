@@ -25,11 +25,11 @@ public class CustomWebApplicationFactory<TStartup>
     {
     }
 
-    public string GenerateJwtToken(AccountEntity? account = null)
+    public string GenerateJwtToken(UserEntity? User = null)
     {
-        // will not be written to db. this is just a fake account object to create a token.
-        var acc = new AccountEntity("Donald Trump", "donaltrump@gmail.com");
-        acc.Claims.Add(new AccountClaimEntity(ClaimTypeEnum.Admin));
+        // will not be written to db. this is just a fake User object to create a token.
+        var acc = new UserEntity("Donald Trump", "donaltrump@gmail.com");
+        acc.Claims.Add(new UserClaimEntity(ClaimTypeEnum.Admin));
         var jwtTokenHelper = Services.CreateScope().ServiceProvider.GetService<IJwtTokenHelper>()!;
         var token = jwtTokenHelper.GenerateJwtToken(acc);
         return token;
