@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Infrastructure.ErrorHandling;
+using Npgsql;
 
 namespace Veveve.Api.Domain.Commands.Users;
 
@@ -42,9 +43,10 @@ public static class UpdateUser
             }
             catch (DbUpdateException e)
             {
-                // if (e.InnerException is SqlException sqlEx &&
-                //     sqlEx.Number == 2601)
-                //     throw new ConflictException(ErrorCodesEnum.User_EMAIL_ALREADY_EXIST);
+               if (e.InnerException is PostgresException ex &&
+                    ex.SqlState == "23505" && 
+                    ex.ConstraintName?.Contains(nameof(UserEntity.Email)) == true)
+                    throw new ConflictException(ErrorCodesEnum.User_EMAIL_ALREADY_EXIST);
 
                 throw;
             }
