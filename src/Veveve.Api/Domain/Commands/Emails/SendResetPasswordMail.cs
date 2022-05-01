@@ -37,7 +37,7 @@ public static class SendResetPasswordMail
                 templateData: new
                 {
                     fullName = request.fullName,
-                    resetLink = $"https://someurl.com/{request.resetPasswordToken.ToString()}"
+                    resetLink = _sendgridSettings.ResetPasswordLink.Replace("{token}", request.resetPasswordToken.ToString())
                 },
                 Guid.NewGuid(),
                 from: new EmailAddress(_sendgridSettings.SendFromEmail, _sendgridSettings.SendFromName),

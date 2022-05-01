@@ -1,11 +1,8 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Veveve.Api.Infrastructure.Database.Entities;
 using Veveve.Api.Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Veveve.Api.Infrastructure.Database;
-using Microsoft.Data.SqlClient;
 using Veveve.Api.Infrastructure.ErrorHandling;
 
 namespace Veveve.Api.Domain.Commands.Users;
@@ -45,9 +42,9 @@ public static class UpdateUser
             }
             catch (DbUpdateException e)
             {
-                if (e.InnerException is SqlException sqlEx &&
-                    sqlEx.Number == 2601)
-                    throw new ConflictException(ErrorCodesEnum.User_EMAIL_ALREADY_EXIST);
+                // if (e.InnerException is SqlException sqlEx &&
+                //     sqlEx.Number == 2601)
+                //     throw new ConflictException(ErrorCodesEnum.User_EMAIL_ALREADY_EXIST);
 
                 throw;
             }

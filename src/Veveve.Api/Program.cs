@@ -50,7 +50,7 @@ builder.Services.AddMediatR(typeof(Veveve.Api.Infrastructure.Database.AppDbConte
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 builder.Services.AddDbContext<AppDbContext>(opts =>
 {
-    opts.UseSqlServer(builder.Configuration.GetConnectionString(nameof(ConnectionStrings.DbConnection)));
+    opts.UseNpgsql(builder.Configuration.GetConnectionString(nameof(ConnectionStrings.DbConnection)));
 });
 
 builder.Services.AddAuth(appsettings.Authorization);
@@ -65,7 +65,7 @@ if (app.Environment.EnvironmentName != "Testing") // dont run this for integrati
         var dbContext = scope.ServiceProvider.GetService<AppDbContext>()!;
         var mediator = scope.ServiceProvider.GetService<IMediator>()!;
         await dbContext.Database.MigrateAsync();
-        // await mediator.Send(new EnsureDefaultAdminUsers.Command());
+        await mediator.Send(new EnsureDefaultAdminUsers.Command());
     }
 }
 

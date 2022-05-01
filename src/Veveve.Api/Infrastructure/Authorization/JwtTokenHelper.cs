@@ -1,20 +1,17 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
 using Veveve.Api.Infrastructure.Database.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 
 namespace Veveve.Api.Infrastructure.Authorization;
 
 public interface IJwtTokenHelper
 {
     string GenerateJwtToken(UserEntity User);
-    string GetEmail(JwtSecurityToken token);
+    int? GetUserId();
+    bool HasAdminClaim();
 }
 
 public class JwtTokenHelper : IJwtTokenHelper
@@ -33,8 +30,27 @@ public class JwtTokenHelper : IJwtTokenHelper
         this._httpContextAccessor = httpContextAccessor;
     }
 
-    public string GetEmail(JwtSecurityToken token) =>
-        token.Claims.First(c => c.Type == CustomClaimTypes.Email).Value as string;
+    private JwtSecurityToken? GetToken()
+    {
+        var authHeaderStr = _httpContextAccessor.HttpContext!.Request.Headers[HeaderNames.Authorization];
+        if (authHeaderStr.Count == 0)
+            return null;
+
+        var jwtTokenStr = authHeaderStr.ToString().Replace("Bearer ", "");
+        return new JwtSecurityToken(jwtTokenStr);
+    }
+
+    public int? GetUserId()
+    {
+        var accountId = GetToken()?.Claims?.FirstOrDefault(c => c.Type == CustomClaimTypes.UserId);
+        if (accountId == null)
+            return null;
+
+        return int.Parse(accountId.Value);
+    }
+
+
+    public bool HasAdminClaim() => GetToken()?.Claims?.Any(c => c.Type == CustomClaimTypes.IsAdmin) == true;
 
     public string GenerateJwtToken(UserEntity User)
     {
@@ -42,9 +58,10 @@ public class JwtTokenHelper : IJwtTokenHelper
 
         var claims = new Dictionary<string, object>(){
             {CustomClaimTypes.Email, User.Email},
-            {CustomClaimTypes.FullName, User.FullName}
+            {CustomClaimTypes.FullName, User.FullName},
+            {CustomClaimTypes.UserId, User.Id},
         };
-        if(User.HasAdminClaim())
+        if (User.HasAdminClaim())
             claims.Add(CustomClaimTypes.IsAdmin, true);
 
         var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authSettings.JwtKey));
