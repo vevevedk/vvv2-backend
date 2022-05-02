@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Veveve.Api.Infrastructure.Database;
 using Veveve.Api.Infrastructure.ErrorHandling;
 using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Npgsql;
 
 namespace Veveve.Api.Domain.Commands.Clients;
 
@@ -32,7 +33,20 @@ public static class UpdateClient
 
             var builder = new ClientBuilder(existingClient)
                 .WithName(request.Name);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException e)
+            {
+                if (e.InnerException is PostgresException ex &&
+                    ex.SqlState == "23505" && 
+                    ex.ConstraintName?.Contains(nameof(ClientEntity.Name)) == true)
+                    throw new ConflictException(ErrorCodesEnum.CLIENT_NAME_ALREADY_EXISTS);
+
+                throw;
+            }
             return existingClient;
         }
     }

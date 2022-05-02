@@ -9,6 +9,9 @@ public class ClientEntity : BaseEntity
         Accounts = new List<AccountEntity>();
     }
 
+    /// <summary>
+    /// Must be unique
+    /// </summary>
     [Required]
     public string Name { get; set; } = null!;
 
