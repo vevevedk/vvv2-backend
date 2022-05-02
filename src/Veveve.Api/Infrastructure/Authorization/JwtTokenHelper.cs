@@ -71,6 +71,8 @@ public class JwtTokenHelper : IJwtTokenHelper
             {CustomClaimTypes.FullName, User.FullName},
             {CustomClaimTypes.UserId, User.Id},
             {CustomClaimTypes.ClientId, User.ClientId},
+            {CustomClaimTypes.ClientName, User.Client.Name},
+            
         };
         if (User.HasAdminClaim())
             claims.Add(CustomClaimTypes.IsAdmin, true);

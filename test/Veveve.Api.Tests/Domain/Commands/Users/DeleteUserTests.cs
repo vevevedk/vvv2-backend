@@ -40,7 +40,8 @@ public class DeleteUserTests : TestBase
         using (var context = new AppDbContext(_dbOptions))
         {
             User = new UserBuilder("asdasd", "jkh214h21@mail.com")
-                .WithTestClient();
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User);
             context.Users.Add(User);
             await context.SaveChangesAsync();
         }

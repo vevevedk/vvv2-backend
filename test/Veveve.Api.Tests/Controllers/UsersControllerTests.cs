@@ -55,6 +55,7 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         {
             User = new UserBuilder("donald trump", "fdgdfgdfs@asd.com")
                 .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User)
                 .WithResetPasswordToken(resetPwToken);
 
             appDbContext.Users.Add(User);
@@ -86,6 +87,7 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
             var pw = pwService.EncryptPassword(password);
             User = new UserBuilder("donald trump", "6345dfsg@asd.com")
                 .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User)
                 .WithPassword(pw.Hash, pw.Salt);
 
             appDbContext.Users.Add(User);
@@ -115,7 +117,8 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
             User = new UserBuilder("donald trump", "dfsgsfdgdf@asd.com")
-                .WithTestClient();
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User);
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
         }
@@ -141,7 +144,8 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
             User = new UserBuilder("donald trump", "324141324@asd.com")
-                .WithTestClient();
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User);
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
         }
@@ -170,7 +174,8 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         using (var appDbContext = _factory.GetScopedServiceProvider().GetService<AppDbContext>()!)
         {
             User = new UserBuilder("donald trump", "sdfgsdfgdsf@asd.com")
-                .WithTestClient();
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User);
             appDbContext.Users.Add(User);
             await appDbContext.SaveChangesAsync();
         }

@@ -9,12 +9,11 @@ public class UserBuilder
         _object = existingUser;
     }
 
-    public UserBuilder(string fullName, string email, bool withUserClaim = true)
+    public UserBuilder(string fullName, string email)
     {
         _object = new UserEntity();
         WithFullName(fullName);
         WithEmail(email);
-        WithClaim(new UserClaimEntity(ClaimTypeEnum.User));
     }
 
     public UserBuilder WithFullName(string fullName)
@@ -53,6 +52,12 @@ public class UserBuilder
     {
         _object.Client = new ClientBuilder("TestClient");
         _object.ClientId = _object.Client.Id;
+        return this;
+    }
+
+    public UserBuilder WithClaim(ClaimTypeEnum claimType)
+    {
+        _object.Claims.Add(new UserClaimBuilder(claimType));
         return this;
     }
 

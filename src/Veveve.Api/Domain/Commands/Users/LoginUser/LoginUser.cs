@@ -30,20 +30,21 @@ public static class LoginUser
 
         public async Task<LoginUserResult> Handle(Command request, CancellationToken cancellationToken)
         {
-            var User = await _dbContext.Users
+            var user = await _dbContext.Users
+                .Include(x => x.Client)
                 .Include(x => x.Claims)
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
-            if (User == null)
+            if (user == null)
                 throw new BusinessRuleException(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID);
 
-            if (string.IsNullOrEmpty(User.Password))
+            if (string.IsNullOrEmpty(user.Password))
                 throw new BusinessRuleException(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID);
 
-            if (_passwordService.VerifyPassword(request.Password, User.Salt!, User.Password) == false)
+            if (_passwordService.VerifyPassword(request.Password, user.Salt!, user.Password) == false)
                 throw new BusinessRuleException(ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID);
 
-            var token = _jwtTokenHelper.GenerateJwtToken(User);
-            return new LoginUserResult(User, token);
+            var token = _jwtTokenHelper.GenerateJwtToken(user);
+            return new LoginUserResult(user, token);
         }
     }
 }

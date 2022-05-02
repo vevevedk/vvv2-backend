@@ -46,7 +46,8 @@ public class LoginUserTests : TestBase
         using (var context = new AppDbContext(_dbOptions))
         {
             context.Users.Add(new UserBuilder("some name", command.Email)
-                .WithTestClient());
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User));
             await context.SaveChangesAsync();
         }
 
@@ -68,7 +69,8 @@ public class LoginUserTests : TestBase
             var pw = _passwordService.EncryptPassword("someotherpass");
             context.Users.Add(new UserBuilder("some name", command.Email)
                 .WithPassword(pw.Hash, pw.Salt)
-                .WithTestClient());
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User));
             await context.SaveChangesAsync();
         }
 
@@ -90,7 +92,8 @@ public class LoginUserTests : TestBase
             var pw = _passwordService.EncryptPassword(command.Password);
             context.Users.Add(new UserBuilder("some name", command.Email)
                 .WithPassword(pw.Hash, pw.Salt)
-                .WithTestClient());
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User));
             await context.SaveChangesAsync();
         }
 

@@ -49,6 +49,7 @@ public class ResetUserPasswordTests : TestBase
         {
             var newAcc = new UserBuilder("asdasd", email)
                 .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User)
                 .Build();
             context.Users.Add(newAcc);
                 await context.SaveChangesAsync();
@@ -79,7 +80,8 @@ public class ResetUserPasswordTests : TestBase
         using (var context = new AppDbContext(_dbOptions))
         {
             var newAcc = new UserBuilder("asdasd", email)
-                .WithTestClient();
+                .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User);
             context.Users.Add(newAcc);
             await context.SaveChangesAsync();
         }

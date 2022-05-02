@@ -30,6 +30,8 @@ public class CustomWebApplicationFactory<TStartup>
     {
         // will not be written to db. this is just a fake User object to create a token.
         var acc = new UserBuilder("Donald Trump", "donaltrump@gmail.com")
+            .WithTestClient()
+            .WithClaim(ClaimTypeEnum.User)
             .WithClaim(new UserClaimEntity(ClaimTypeEnum.Admin));
         var jwtTokenHelper = Services.CreateScope().ServiceProvider.GetService<IJwtTokenHelper>()!;
         var token = jwtTokenHelper.GenerateJwtToken(acc);

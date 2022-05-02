@@ -48,6 +48,7 @@ public class UpdateUserPasswordTests : TestBase
         {
             User = new UserBuilder("asdasd", "jkh214h21@mail.com")
                 .WithTestClient()
+                .WithClaim(ClaimTypeEnum.User)
                 .WithResetPasswordToken(pwToken);
             context.Users.Add(User);
             await context.SaveChangesAsync();
