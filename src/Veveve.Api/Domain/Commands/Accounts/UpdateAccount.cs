@@ -11,7 +11,7 @@ namespace Veveve.Api.Domain.Commands.Accounts;
 
 public static class UpdateAccount
 {
-    public record Command(int Id, int GoogleAdsAccountId, string GoogleAdsAccountName) : IRequest<AccountEntity>;
+    public record Command(int Id, string GoogleAdsAccountId, string GoogleAdsAccountName) : IRequest<AccountEntity>;
 
     public class Handler : IRequestHandler<Command, AccountEntity>
     {

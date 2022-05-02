@@ -5,7 +5,7 @@ namespace Veveve.Api.Controllers.Accounts;
 public class BaseAccountRequest
 {
     [Required]
-    public int GoogleAdsAccountId { get; set; }
+    public string GoogleAdsAccountId { get; set; } = null!;
     [Required]
     public string GoogleAdsAccountName { get; set; } = null!;
 }

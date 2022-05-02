@@ -14,7 +14,7 @@ public class AccountBuilder
         _object = existingAccount;
     }
 
-    public AccountBuilder WithGoogleAdsAccount(int googleAdsAccountId, string googleAdsAccountName)
+    public AccountBuilder WithGoogleAdsAccount(string googleAdsAccountId, string googleAdsAccountName)
     {
         _object.GoogleAdsAccountId = googleAdsAccountId;
         _object.GoogleAdsAccountName = googleAdsAccountName;
@@ -32,7 +32,7 @@ public class AccountBuilder
 
     public AccountEntity Build()
     {
-        if(_object.GoogleAdsAccountId == 0 || _object.GoogleAdsAccountName == null)
+        if(_object.GoogleAdsAccountId == null || _object.GoogleAdsAccountName == null)
             throw new InvalidOperationException("GoogleAdsAccountId and GoogleAdsAccountName must be set.");
         return _object;
     }

@@ -70,8 +70,8 @@ public class UsersController : ControllerBase
         if(_jwtTokenHelper.GetUserId() != id && !_jwtTokenHelper.HasAdminClaim())
             return StatusCode((int)HttpStatusCode.Forbidden, $"You can only update your own account, unless you're an admin");
             
-        var User = await _mediator.Send(new UpdateUser.Command(id, body.ClientId, body.FullName, body.Email, body.IsAdmin));
-        return Ok(new UserResponse(User));
+        var user = await _mediator.Send(new UpdateUser.Command(id, body.ClientId, body.FullName, body.Email, body.IsAdmin));
+        return Ok(new UserResponse(user));
     }
 
     /// <summary>
@@ -93,8 +93,8 @@ public class UsersController : ControllerBase
         if(clientId != null && jwtClientId != clientId && !_jwtTokenHelper.HasAdminClaim())
             return StatusCode((int)HttpStatusCode.Forbidden, $"You can only fetch users for your own client, unless you're an admin");
 
-        var Users = await _mediator.Send(new GetUsers.Query(clientId ?? jwtClientId!.Value));
-        return Ok(Users.Select(x => new UserResponse(x)));
+        var users = await _mediator.Send(new GetUsers.Query(clientId ?? jwtClientId!.Value));
+        return Ok(users.Select(x => new UserResponse(x)));
     }
 
     /// <summary>

@@ -36,8 +36,9 @@ namespace Veveve.Api.Infrastructure.Database.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("GoogleAdsAccountId")
-                        .HasColumnType("integer");
+                    b.Property<string>("GoogleAdsAccountId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("GoogleAdsAccountName")
                         .IsRequired()
@@ -48,7 +49,9 @@ namespace Veveve.Api.Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("GoogleAdsAccountId")
                         .IsUnique();
 
                     b.ToTable("Accounts");

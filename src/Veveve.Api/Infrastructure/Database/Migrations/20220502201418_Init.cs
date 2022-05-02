@@ -49,7 +49,7 @@ namespace Veveve.Api.Infrastructure.Database.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    GoogleAdsAccountId = table.Column<int>(type: "integer", nullable: false),
+                    GoogleAdsAccountId = table.Column<string>(type: "text", nullable: false),
                     GoogleAdsAccountName = table.Column<string>(type: "text", nullable: false),
                     ClientId = table.Column<int>(type: "integer", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -117,7 +117,12 @@ namespace Veveve.Api.Infrastructure.Database.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_ClientId",
                 table: "Accounts",
-                column: "ClientId",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_GoogleAdsAccountId",
+                table: "Accounts",
+                column: "GoogleAdsAccountId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

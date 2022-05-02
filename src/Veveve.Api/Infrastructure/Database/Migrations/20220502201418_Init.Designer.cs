@@ -12,7 +12,7 @@ using Veveve.Api.Infrastructure.Database;
 namespace Veveve.Api.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220502072832_Init")]
+    [Migration("20220502201418_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,8 +38,9 @@ namespace Veveve.Api.Infrastructure.Database.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("GoogleAdsAccountId")
-                        .HasColumnType("integer");
+                    b.Property<string>("GoogleAdsAccountId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("GoogleAdsAccountName")
                         .IsRequired()
@@ -50,7 +51,9 @@ namespace Veveve.Api.Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("GoogleAdsAccountId")
                         .IsUnique();
 
                     b.ToTable("Accounts");

@@ -45,7 +45,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<UserEntity>().HasIndex(b => b.Email).IsUnique();
-        modelBuilder.Entity<AccountEntity>().HasIndex(b => b.ClientId).IsUnique();
+        modelBuilder.Entity<AccountEntity>().HasIndex(b => b.GoogleAdsAccountId).IsUnique();
         modelBuilder.Entity<ClientEntity>().HasIndex(b => b.Name).IsUnique();
         modelBuilder.Entity<EmailLogEntity>().HasIndex(b => b.Reference).IsUnique();
     }

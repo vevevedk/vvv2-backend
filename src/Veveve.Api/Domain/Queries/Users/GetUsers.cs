@@ -23,11 +23,12 @@ public static class GetUsers
 
         public async Task<IEnumerable<UserEntity>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var Users = await _dbContext.Users
+            var users = await _dbContext.Users
+                .Include(x => x.Claims)
                 .AsNoTracking()
                 .Where(x => x.ClientId == request.ClientId)
                 .ToArrayAsync();
-            return Users;
+            return users;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Veveve.Api.Domain.Commands.Accounts;
 
 public static class CreateAccount
 {
-    public record Command(int ClientId, int GoogleAdsAccountId, string GoogleAdsAccountName) : IRequest<AccountEntity>;
+    public record Command(int ClientId, string GoogleAdsAccountId, string GoogleAdsAccountName) : IRequest<AccountEntity>;
 
     public class Handler : IRequestHandler<Command, AccountEntity>
     {

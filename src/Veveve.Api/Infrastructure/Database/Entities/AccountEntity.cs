@@ -9,7 +9,7 @@ public class AccountEntity : BaseEntity
     }
 
     [Required]
-    public int GoogleAdsAccountId { get; set; }
+    public string GoogleAdsAccountId { get; set; } = null!;
     [Required]
     public string GoogleAdsAccountName { get; set; } = null!;
 

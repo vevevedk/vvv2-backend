@@ -15,7 +15,7 @@ public class AccountResponse : BaseResponse
     }
 
     public int Id { get; set; }
-    public int GoogleAdsAccountId { get; set; }
+    public string GoogleAdsAccountId { get; set; } = null!;
     public string GoogleAdsAccountName { get; set; } = null!;
     public DateTime CreatedDate { get; set; }
     public DateTime LastModifiedDate { get; set; }
