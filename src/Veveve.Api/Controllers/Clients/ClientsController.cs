@@ -87,4 +87,21 @@ public class ClientsController : ControllerBase
         await _mediator.Send(new DeleteClient.Command(id));
         return NoContent();
     }
+
+    /// <summary>
+    /// [Admin] Assume a specific client
+    /// </summary>
+    /// <remarks>
+    /// Gain a token with a clientId claim set to the clientId of the client you want to assume.
+    /// </remarks>
+    [Authorize(AuthPolicies.Admin)]
+    [HttpPut("{id}/assume", Name = nameof(AssumeClient))]
+    [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST)]
+    public async Task<ActionResult<ClientAssumeResponse>> AssumeClient([FromRoute] int id)
+    {
+        var jwtToken = await _mediator.Send(new AssumeClient.Command(id));
+        return Ok(new ClientAssumeResponse(jwtToken));
+    }
 }

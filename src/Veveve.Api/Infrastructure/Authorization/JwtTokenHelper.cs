@@ -9,7 +9,7 @@ namespace Veveve.Api.Infrastructure.Authorization;
 
 public interface IJwtTokenHelper
 {
-    string GenerateJwtToken(UserEntity User);
+    string GenerateJwtToken(UserEntity User, ClientEntity? overrideClient = null);
     int? GetClientId();
     int? GetUserId();
     bool HasAdminClaim();
@@ -62,7 +62,7 @@ public class JwtTokenHelper : IJwtTokenHelper
 
     public bool HasAdminClaim() => GetToken()?.Claims?.Any(c => c.Type == CustomClaimTypes.IsAdmin) == true;
 
-    public string GenerateJwtToken(UserEntity User)
+    public string GenerateJwtToken(UserEntity User, ClientEntity? overrideClient = null)
     {
         _logger.LogInformation("Generating jwt token for User {0}", User.Id);
 
@@ -70,8 +70,8 @@ public class JwtTokenHelper : IJwtTokenHelper
             {CustomClaimTypes.Email, User.Email},
             {CustomClaimTypes.FullName, User.FullName},
             {CustomClaimTypes.UserId, User.Id},
-            {CustomClaimTypes.ClientId, User.ClientId},
-            {CustomClaimTypes.ClientName, User.Client.Name},
+            {CustomClaimTypes.ClientId, overrideClient?.Id ?? User.Client.Id},
+            {CustomClaimTypes.ClientName, overrideClient?.Name ?? User.Client.Name},
             
         };
         if (User.HasAdminClaim())
