@@ -7,7 +7,7 @@ namespace Veveve.Api.Domain.Queries.Accounts;
 
 public static class GetAccounts
 {
-    public record Query() : IRequest<IEnumerable<AccountEntity>>;
+    public record Query(int ClientId) : IRequest<IEnumerable<AccountEntity>>;
 
     public class Handler : IRequestHandler<Query, IEnumerable<AccountEntity>>
     {
@@ -22,6 +22,7 @@ public static class GetAccounts
         {
             var accounts = await _dbContext.Accounts
                 .AsNoTracking()
+                .Where(x => x.ClientId == request.ClientId)
                 .ToArrayAsync();
             return accounts;
         }

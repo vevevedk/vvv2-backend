@@ -70,7 +70,8 @@ public class AccountsController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAccounts()
     {
-        var accounts = await _mediator.Send(new GetAccounts.Query());
+        var jwtClientId = _jwtTokenHelper.GetClientId()!.Value;
+        var accounts = await _mediator.Send(new GetAccounts.Query(jwtClientId));
         return Ok(accounts.Select(x => new AccountResponse(x)));
     }
 

@@ -80,20 +80,15 @@ public class UsersController : ControllerBase
     /// <remarks>
     /// Will use the client claim from the jwt token.
     /// </remarks>
-    /// <param name="clientId">The client id. This is optional and intended for admins only. This will overrule the client id claim from jwt token</param>
     [Authorize]
     [HttpGet(Name = nameof(GetUsers))]
     [Produces("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsers(
-        [FromQuery] int? clientId = null
     )
     {
-        var jwtClientId = _jwtTokenHelper.GetClientId();
-        if(clientId != null && jwtClientId != clientId && !_jwtTokenHelper.HasAdminClaim())
-            return StatusCode((int)HttpStatusCode.Forbidden, $"You can only fetch users for your own client, unless you're an admin");
-
-        var users = await _mediator.Send(new GetUsers.Query(clientId ?? jwtClientId!.Value));
+        var jwtClientId = _jwtTokenHelper.GetClientId()!.Value;
+        var users = await _mediator.Send(new GetUsers.Query(jwtClientId));
         return Ok(users.Select(x => new UserResponse(x)));
     }
 
