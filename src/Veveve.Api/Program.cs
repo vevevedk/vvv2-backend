@@ -20,11 +20,11 @@ var appsettings = builder.Configuration.Get<Appsettings>();
 
 // init serilog
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Default", LogEventLevel.Debug)
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
-    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Debug)
-    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Debug)
-    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Debug)
+    .MinimumLevel.Override("Default", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateBootstrapLogger();
