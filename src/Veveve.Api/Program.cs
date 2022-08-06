@@ -41,6 +41,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<Appsettings>(builder.Configuration);
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection(nameof(Appsettings.SendGrid)));
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration.GetSection(nameof(Appsettings.Authorization)));
+builder.Services.Configure<GoogleAdsApiSettings>(builder.Configuration.GetSection(nameof(Appsettings.GoogleAdsApi)));
+builder.Services.AddScoped<IGoogleAdsClientFacade, GoogleAdsClientFacade>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<ISendGridClientFacade, SendGridClientFacade>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
