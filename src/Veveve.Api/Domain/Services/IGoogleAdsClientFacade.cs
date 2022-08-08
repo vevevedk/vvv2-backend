@@ -4,6 +4,6 @@ namespace Veveve.Api.Domain.Services
 {
     public interface IGoogleAdsClientFacade
     {
-        public abstract GoogleAdsClient InitializeClient();
+        public Task InitialTest();
     }
 }

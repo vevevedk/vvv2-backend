@@ -9,7 +9,7 @@ public class Appsettings
     public AuthorizationSettings Authorization { get; set; }
     public DefaultAdminUser[] DefaultAdminUsers { get; set; } = new DefaultAdminUser[0];
     public string DefaultAdminClientName { get; set; }
-    public GoogleAdsApiSettings GoogleAdsApi { get; set; }
+    public GoogleAdsApi GoogleAdsApi { get; set; }
 }
 
 public class ConnectionStrings
@@ -61,7 +61,7 @@ public class DefaultAdminUser
     public string Email { get; set; }
 }
 
-public class GoogleAdsApiSettings
+public class GoogleAdsApi
 {
     public string DeveloperToken { get; set; }
     public string OAuth2Mode { get; set; }

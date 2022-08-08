@@ -14,6 +14,10 @@ using Veveve.Api.Infrastructure.Swagger;
 using Serilog;
 using Serilog.Events;
 using Veveve.Api.Domain.PipelineBehaviours;
+using Google.Ads.GoogleAds.Lib;
+using Google.Ads.Gax.Lib;
+using Google.Ads.GoogleAds.Config;
+using Google.Ads.Gax.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 var appsettings = builder.Configuration.Get<Appsettings>();
@@ -41,12 +45,26 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<Appsettings>(builder.Configuration);
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection(nameof(Appsettings.SendGrid)));
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration.GetSection(nameof(Appsettings.Authorization)));
-builder.Services.Configure<GoogleAdsApiSettings>(builder.Configuration.GetSection(nameof(Appsettings.GoogleAdsApi)));
-builder.Services.AddScoped<IGoogleAdsClientFacade, GoogleAdsClientFacade>();
+builder.Services.Configure<GoogleAdsApi>(builder.Configuration.GetSection(nameof(Appsettings.GoogleAdsApi)));
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<ISendGridClientFacade, SendGridClientFacade>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ISendGridClient, SendGridClient>(serviceProvider => new SendGridClient(appsettings.SendGrid.ApiKey));
+
+// ====== Google Ads Client Setup ======
+builder.Services.AddScoped<IGoogleAdsClientFacade, GoogleAdsClientFacade>();
+GoogleAdsConfig config = new GoogleAdsConfig()
+{
+    DeveloperToken = appsettings.GoogleAdsApi.DeveloperToken,
+    OAuth2Mode = OAuth2Flow.APPLICATION, //might have to be service account?
+    OAuth2ClientId = appsettings.GoogleAdsApi.OAuth2ClientId,
+    OAuth2ClientSecret = appsettings.GoogleAdsApi.OAuth2ClientSecret,
+    OAuth2RefreshToken = appsettings.GoogleAdsApi.OAuth2RefreshToken
+
+};
+builder.Services.AddScoped<AdsClient<GoogleAdsConfig>, GoogleAdsClient>(serviceProvider => new GoogleAdsClient(config));
+// ====== Google Ads Client Setup ======
+
 builder.Services.AddScoped<IJwtTokenHelper, JwtTokenHelper>();
 builder.Services.AddMediatR(typeof(Veveve.Api.Infrastructure.Database.AppDbContext).Assembly); // use any type from Veveve.Api
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
