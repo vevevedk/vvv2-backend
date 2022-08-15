@@ -56,11 +56,11 @@ builder.Services.AddScoped<IGoogleAdsClientFacade, GoogleAdsClientFacade>();
 GoogleAdsConfig config = new GoogleAdsConfig()
 {
     DeveloperToken = appsettings.GoogleAdsApi.DeveloperToken,
-    OAuth2Mode = OAuth2Flow.APPLICATION, //might have to be service account?
+    LoginCustomerId = appsettings.GoogleAdsApi.CustomerId,
+    OAuth2Mode = OAuth2Flow.APPLICATION,
     OAuth2ClientId = appsettings.GoogleAdsApi.OAuth2ClientId,
     OAuth2ClientSecret = appsettings.GoogleAdsApi.OAuth2ClientSecret,
     OAuth2RefreshToken = appsettings.GoogleAdsApi.OAuth2RefreshToken
-
 };
 builder.Services.AddScoped<AdsClient<GoogleAdsConfig>, GoogleAdsClient>(serviceProvider => new GoogleAdsClient(config));
 // ====== Google Ads Client Setup ======

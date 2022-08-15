@@ -68,4 +68,5 @@ public class GoogleAdsApi
     public string OAuth2ClientId { get; set; }
     public string OAuth2ClientSecret { get; set; }
     public string OAuth2RefreshToken { get; set; }
+    public string CustomerId { get; set; }
 }
