@@ -52,7 +52,6 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ISendGridClient, SendGridClient>(serviceProvider => new SendGridClient(appsettings.SendGrid.ApiKey));
 
 // ====== Google Ads Client Setup ======
-builder.Services.AddScoped<IGoogleAdsClientFacade, GoogleAdsClientFacade>();
 GoogleAdsConfig config = new GoogleAdsConfig()
 {
     DeveloperToken = appsettings.GoogleAdsApi.DeveloperToken,

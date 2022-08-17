@@ -4,8 +4,8 @@ using System.Net;
 using Veveve.Api.Infrastructure.Authorization;
 using Veveve.Api.Domain.Commands.GoogleAds;
 using Veveve.Api.Controllers.GoogleAds.SearchTerms;
-using Microsoft.AspNetCore.Authorization;
 using Veveve.Api.Infrastructure.Swagger;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Veveve.Api.Controllers.GoogleAds;
 
@@ -29,22 +29,15 @@ public class SearchTermsController : ControllerBase
     /// </summary>
     /// <param name="body"></param>
     /// <returns></returns>
-    [HttpPost(Name = nameof(GetSearchTerms))]
+    [HttpGet(Name = nameof(GetSearchTerms))]
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [SwaggerErrorCodes(HttpStatusCode.InternalServerError)]
-    //[Authorize]
-    public async Task<ActionResult<GetSearchTermsResponse>> GetSearchTerms([FromBody] GetSearchTermRequest body)
+    [Authorize]
+    public async Task<ActionResult<GetSearchTermsResponse>> GetSearchTerms([FromQuery] GetSearchTermRequest body)
     {
-        try
-        {
-            var searchTerms = await _mediator.Send(new GetSearchTerms.Query(body.GoogleAdsCustomerId, body.LookbackDays));
-            return Ok(searchTerms.Select(dto => new GetSearchTermsResponse(dto)));
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        var searchTerms = await _mediator.Send(new GetSearchTermsDynamicSearchAds.Query(body.GoogleAdsCustomerId, body.LookbackDays));
+        return Ok(searchTerms.Select(dto => new GetSearchTermsResponse(dto)));
     }
 }
