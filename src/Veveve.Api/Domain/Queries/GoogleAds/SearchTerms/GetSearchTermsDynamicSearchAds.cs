@@ -13,11 +13,11 @@ public static class GetSearchTermsDynamicSearchAds
 
     public class Handler : IRequestHandler<Query, IEnumerable<SearchTermsDto>>
     {
-        private readonly AdsClient<GoogleAdsConfig> _client;
+        private readonly GoogleAdsClient _client;
 
         public Handler(AdsClient<GoogleAdsConfig> client)
         {
-            _client = client;
+            _client = (GoogleAdsClient)client;
         }
 
         public async Task<IEnumerable<SearchTermsDto>> Handle(Query request, CancellationToken cancellationToken)
@@ -26,7 +26,6 @@ public static class GetSearchTermsDynamicSearchAds
 
             // "dynamic_search_ads_search_term_ivew.has_negative_keyword" and "metrics.cost" have been cut from the sql, because they are not selectable with the given FROM clause
             // see: https://developers.google.com/google-ads/api/fields/v11/dynamic_search_ads_search_term_view_query_builder for more info
-            var castedClient = (GoogleAdsClient)_client;
             var today = DateTime.Today.Date;
             var lookbackDate = today.AddDays(-request.LookbackDays).Date;
             var query = @$"SELECT
@@ -54,7 +53,7 @@ public static class GetSearchTermsDynamicSearchAds
                 Query = query
             };
 
-            var googleAdsService = castedClient.GetService(Google.Ads.GoogleAds.Services.V11.GoogleAdsService);
+            var googleAdsService = _client.GetService(Google.Ads.GoogleAds.Services.V11.GoogleAdsService);
             var apiResult = googleAdsService.SearchAsync(request: gaRequest);
             var searchTermList = new List<SearchTermsDto>();
 
