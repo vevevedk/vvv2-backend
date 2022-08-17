@@ -55,10 +55,10 @@ public static class GetSearchTermsDynamicSearchAds
             };
 
             var googleAdsService = castedClient.GetService(Google.Ads.GoogleAds.Services.V11.GoogleAdsService);
-            var apiResult = googleAdsService.Search(request: gaRequest);
+            var apiResult = googleAdsService.SearchAsync(request: gaRequest);
             var searchTermList = new List<SearchTermsDto>();
 
-            foreach (var row in apiResult)
+            await foreach (var row in apiResult)
             {
                 var dto = new SearchTermsDto();
                 dto.AdGroupId = row.AdGroup.Id.ToString();
