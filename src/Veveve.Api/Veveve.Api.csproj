@@ -12,6 +12,7 @@
 		<InternalsVisibleTo Include="Veveve.Api.Tests" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Google.Ads.GoogleAds" Version="13.0.2" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.4" NoWarn="NU1605" />
