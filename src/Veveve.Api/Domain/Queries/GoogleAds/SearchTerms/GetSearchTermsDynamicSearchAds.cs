@@ -22,8 +22,6 @@ public static class GetSearchTermsDynamicSearchAds
 
         public async Task<IEnumerable<SearchTermsDto>> Handle(Query request, CancellationToken cancellationToken)
         {
-            //var res2 = await _googleAdsClientFacade.GetSearchTerms(request.CustomerId, request.LookbackDays); // maybe I want the dto instead?
-
             // "dynamic_search_ads_search_term_ivew.has_negative_keyword" and "metrics.cost" have been cut from the sql, because they are not selectable with the given FROM clause
             // see: https://developers.google.com/google-ads/api/fields/v11/dynamic_search_ads_search_term_view_query_builder for more info
             var today = DateTime.Today.Date;
@@ -73,7 +71,6 @@ public static class GetSearchTermsDynamicSearchAds
             }
 
             return searchTermList;
-            // TODO join the results together
         }
     }
 }
