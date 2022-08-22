@@ -1,7 +1,4 @@
-﻿using Google.Ads.Gax.Lib;
-using Google.Ads.GoogleAds.Config;
-using Google.Ads.GoogleAds.Lib;
-using MediatR;
+﻿using MediatR;
 using Veveve.Api.Domain.Services;
 
 namespace Veveve.Api.Domain.Commands.GoogleAds;
