@@ -34,10 +34,10 @@ public class SearchTermsController : ControllerBase
     [Consumes("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [SwaggerErrorCodes(HttpStatusCode.InternalServerError)]
-    [Authorize]
+    //[Authorize]
     public async Task<ActionResult<GetSearchTermsResponse>> GetSearchTerms([FromQuery] GetSearchTermRequest body)
     {
-        var searchTerms = await _mediator.Send(new GetSearchTermsDynamicSearchAds.Query(body.GoogleAdsCustomerId, body.LookbackDays));
+        var searchTerms = await _mediator.Send(new GetSearchTerms.Query(body.GoogleAdsCustomerId, body.LookbackDays));
         return Ok(searchTerms.Select(dto => new GetSearchTermsResponse(dto)));
     }
 }
