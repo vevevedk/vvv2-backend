@@ -26,11 +26,11 @@ public class CustomWebApplicationFactory<TStartup>
     {
     }
 
-    public string GenerateJwtToken(UserEntity? User = null)
+    public string GenerateJwtToken(int? clientId = null)
     {
         // will not be written to db. this is just a fake User object to create a token.
         var acc = new UserBuilder("Donald Trump", "donaltrump@gmail.com")
-            .WithTestClient()
+            .WithTestClient(clientId)
             .WithClaim(ClaimTypeEnum.User)
             .WithClaim(new UserClaimEntity(ClaimTypeEnum.Admin));
         var jwtTokenHelper = Services.CreateScope().ServiceProvider.GetService<IJwtTokenHelper>()!;
@@ -40,11 +40,11 @@ public class CustomWebApplicationFactory<TStartup>
 
     public IServiceProvider GetScopedServiceProvider() => Services.CreateScope().ServiceProvider;
 
-    public HttpClient CreateNewHttpClient(bool withBearer = false)
+    public HttpClient CreateNewHttpClient(bool withBearer = false, int? clientId = null)
     {
         var httpClient = Server.CreateClient();
         if (withBearer)
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {GenerateJwtToken()}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {GenerateJwtToken(clientId)}");
 
         return httpClient;
     }

@@ -29,11 +29,10 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
 
         var email = "try54y4tre@asd.com";
         // Act
-        var httpClient = _factory.CreateNewHttpClient(true);
+        var httpClient = _factory.CreateNewHttpClient(true, client.Id);
         var response = await httpClient.PostAsync($"/api/v1/Users",
             new CreateUserRequest
             {
-                ClientId = client.Id,
                 Email = email,
                 FullName = "donald trump",
                 IsAdmin = false
@@ -151,7 +150,7 @@ public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Pr
         }
 
         // Act
-        var httpClient = _factory.CreateNewHttpClient(true);
+        var httpClient = _factory.CreateNewHttpClient(true, User.ClientId);
         var response = await httpClient.PutAsync($"/api/v1/Users/{User.Id}",
             new UpdateUserRequest
             {
