@@ -27,7 +27,7 @@ public class SearchTermsController : ControllerBase
     /// <summary>
     /// Gets all search terms for a given Google Ads Customer ID and with a number of days of which to evaluate
     /// </summary>
-    /// <param name="body"></param>
+    /// <param name="request"></param>
     /// <returns></returns>
     [HttpGet(Name = nameof(GetSearchTerms))]
     [Produces("application/json")]
@@ -35,9 +35,9 @@ public class SearchTermsController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [SwaggerErrorCodes(HttpStatusCode.InternalServerError)]
     [Authorize]
-    public async Task<ActionResult<GetSearchTermsResponse>> GetSearchTerms([FromQuery] GetSearchTermRequest body)
+    public async Task<ActionResult<IEnumerable<SearchTermResponse>>> GetSearchTerms([FromQuery] GetSearchTermRequest request)
     {
-        var searchTerms = await _mediator.Send(new GetSearchTermsDynamicSearchAds.Query(body.GoogleAdsCustomerId, body.LookbackDays));
-        return Ok(searchTerms.Select(dto => new GetSearchTermsResponse(dto)));
+        var searchTerms = await _mediator.Send(new GetSearchTermsDynamicSearchAds.Query(request.GoogleAdsCustomerId, request.LookbackDays));
+        return Ok(searchTerms.Select(dto => new SearchTermResponse(dto)));
     }
 }

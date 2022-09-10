@@ -3,9 +3,9 @@ using Veveve.Api.Domain.Services;
 
 namespace Veveve.Api.Controllers.GoogleAds.SearchTerms
 {
-    public class GetSearchTermsResponse
+    public class SearchTermResponse
     {
-        public GetSearchTermsResponse(SearchTermsDto model)
+        public SearchTermResponse(SearchTermsDto model)
         {
             CampaignName = model.CampaignName;
             AdGroupName = model.AdGroupName;
