@@ -18,21 +18,21 @@ using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddDomain(context.Configuration);
-        services.AddScoped<ISchedulerService, SchedulerService>();
-        services.AddHostedService<SchedulerProgram>();
+        services.AddScoped<IJobRunnerService, JobRunnerService>();
+        services.AddHostedService<JobRunnerProgram>();
     })
     .UseSerilog()
     .Build();
 
 await host.RunAsync();
 
-public class SchedulerProgram : BackgroundService
+public class JobRunnerProgram : BackgroundService
 {
     private readonly IMediator _mediator;
     private readonly IServiceScopeFactory _scopeFactory;
 
     // we need to start a new scope for each iteration of the background service
-    public SchedulerProgram(IMediator mediator, IServiceScopeFactory scopeFactory)
+    public JobRunnerProgram(IMediator mediator, IServiceScopeFactory scopeFactory)
     {
         _mediator = mediator;
         _scopeFactory = scopeFactory;
@@ -45,7 +45,7 @@ public class SchedulerProgram : BackgroundService
             // initiate a scope. all services within this scope are isolated.
             // this allows us to inject scoped services without risk of them becoming singletons
             using var scope = _scopeFactory.CreateAsyncScope();
-            var schedulerService = scope.ServiceProvider.GetRequiredService<ISchedulerService>();
+            var schedulerService = scope.ServiceProvider.GetRequiredService<IJobRunnerService>();
 
             await schedulerService.DoStuff();
 
