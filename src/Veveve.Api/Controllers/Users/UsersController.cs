@@ -40,7 +40,8 @@ public class UsersController : ControllerBase
     [SwaggerErrorCodes(HttpStatusCode.Conflict, ErrorCodesEnum.USER_EMAIL_ALREADY_EXIST)]
     public async Task<ActionResult<UserResponse>> CreateUser([FromBody] CreateUserRequest body)
     {
-        var User = await _mediator.Send(new CreateUser.Command(body.ClientId, body.FullName, body.Email, body.IsAdmin));
+        var jwtClientId = _jwtTokenHelper.GetClientId()!.Value;
+        var User = await _mediator.Send(new CreateUser.Command(jwtClientId, body.FullName, body.Email, body.IsAdmin));
         return Created("", new UserResponse(User));
     }
 
@@ -62,15 +63,14 @@ public class UsersController : ControllerBase
         [FromRoute] int id,
         [FromBody] UpdateUserRequest body)
     {
-        if(!_jwtTokenHelper.HasAdminClaim() && (
-            body.IsAdmin.HasValue ||
-            body.ClientId.HasValue))
-            return StatusCode((int)HttpStatusCode.Forbidden, $"You must have admin rights to update the following properties: {nameof(body.IsAdmin)}, {nameof(body.ClientId)}");
-        
-        if(_jwtTokenHelper.GetUserId() != id && !_jwtTokenHelper.HasAdminClaim())
+        var jwtClientId = _jwtTokenHelper.GetClientId()!.Value;
+        if (!_jwtTokenHelper.HasAdminClaim() && body.IsAdmin.HasValue)
+            return StatusCode((int)HttpStatusCode.Forbidden, $"You must have admin rights to update the following properties: {nameof(body.IsAdmin)}");
+
+        if (_jwtTokenHelper.GetUserId() != id && !_jwtTokenHelper.HasAdminClaim())
             return StatusCode((int)HttpStatusCode.Forbidden, $"You can only update your own account, unless you're an admin");
-            
-        var user = await _mediator.Send(new UpdateUser.Command(id, body.ClientId, body.FullName, body.Email, body.IsAdmin));
+
+        var user = await _mediator.Send(new UpdateUser.Command(id, jwtClientId, body.FullName, body.Email, body.IsAdmin));
         return Ok(new UserResponse(user));
     }
 

@@ -39,7 +39,8 @@ public class AccountsController : ControllerBase
     [SwaggerErrorCodes(HttpStatusCode.Conflict, ErrorCodesEnum.ACCOUNT_GOOGLEADSID_ALREADY_EXIST)]
     public async Task<ActionResult<AccountResponse>> CreateAccount([FromBody] CreateAccountRequest body)
     {
-        var account = await _mediator.Send(new CreateAccount.Command(body.ClientId, body.GoogleAdsAccountId, body.GoogleAdsAccountName));
+        var jwtClientId = _jwtTokenHelper.GetClientId()!.Value;
+        var account = await _mediator.Send(new CreateAccount.Command(jwtClientId, body.GoogleAdsAccountId, body.GoogleAdsAccountName));
         return Created("", new AccountResponse(account));
     }
 

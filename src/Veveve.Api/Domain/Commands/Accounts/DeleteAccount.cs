@@ -24,7 +24,7 @@ public static class DeleteAccount
         {
             var existingAccount = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.Id == request.Id);
             if(existingAccount == null)
-                throw new NotFoundException(ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST);    
+                throw new NotFoundException(ErrorCodesEnum.ACCOUNT_ID_DOESNT_EXIST);    
             
             _dbContext.Remove(existingAccount);
             await _dbContext.SaveChangesAsync(cancellationToken);

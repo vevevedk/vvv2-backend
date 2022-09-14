@@ -48,10 +48,11 @@ public class UserBuilder
         return this;
     }
 
-    public UserBuilder WithTestClient()
+    public UserBuilder WithTestClient(int? clientId = null)
     {
         _object.Client = new ClientBuilder("TestClient");
-        _object.ClientId = _object.Client.Id;
+        if (clientId.HasValue) _object.Client.Id = clientId.Value;
+        _object.ClientId = clientId ?? _object.Client.Id;
         return this;
     }
 
