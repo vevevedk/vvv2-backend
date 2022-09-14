@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Veveve.Domain.Models.Options;
 
-namespace Veveve.Domain.Authorization;
+namespace Veveve.Api.Authorization;
 
 public static class AuthenticationExtensions
 {
@@ -13,7 +13,7 @@ public static class AuthenticationExtensions
     /// Add JWT bearer scheme. 
     /// Using the [Authorize] attribute on controllers or controller-actions, will activate bearer authentication.
     /// </summary>
-    public static IServiceCollection AddAuth(this IServiceCollection services, AuthorizationSettings settings)
+    public static IServiceCollection AddAuth(this IServiceCollection services, AuthorizationOptions settings)
     {
         services.AddAuthentication(options =>
         {

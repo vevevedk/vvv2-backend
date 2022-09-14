@@ -1,9 +1,9 @@
 using Veveve.Api.Controllers;
-using Veveve.Domain.Utils;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Veveve.Api.Utils;
 
-namespace Veveve.Domain.Swagger
+namespace Veveve.Api.Swagger
 {
     /// <summary>
     /// Add a list of all possible error codes for an endpoint along with descriptions
@@ -25,9 +25,11 @@ namespace Veveve.Domain.Swagger
                     schema = context.SchemaGenerator.GenerateSchema(typeof(ApiErrorResponse), context.SchemaRepository);
 
                 var description = "";
-                if(attr.ErrorCodes.Any()){
+                if (attr.ErrorCodes.Any())
+                {
                     description = "<p>Error codes:</p><ul>";
-                    foreach(var errorCode in attr.ErrorCodes){
+                    foreach (var errorCode in attr.ErrorCodes)
+                    {
                         description += $"<li><i>{(int)errorCode}</i> - {errorCode.GetDescription()}</li>";
                     }
                     description += "</ul>";

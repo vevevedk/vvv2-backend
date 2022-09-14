@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using Veveve.Domain.Authorization;
+using Veveve.Api.Authorization;
 using Veveve.Domain.Commands.GoogleAds;
 using Veveve.Api.Controllers.GoogleAds.SearchTerms;
-using Veveve.Domain.Swagger;
+using Veveve.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Veveve.Api.Controllers.GoogleAds;

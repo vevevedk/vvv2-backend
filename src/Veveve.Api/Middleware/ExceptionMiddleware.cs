@@ -3,7 +3,7 @@ using System.Net;
 using System.Text.Json;
 using Veveve.Api.Controllers;
 
-namespace Veveve.Domain.Middleware;
+namespace Veveve.Api.Middleware;
 
 /// <summary>
 /// middleware to catch exceptions and format the api response.

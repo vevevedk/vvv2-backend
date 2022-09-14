@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Veveve.Domain.Authorization;
 using Veveve.Domain.Database;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Veveve.Domain.Database.Entities.Builders;
 using Veveve.Domain.Services;
+using Veveve.Api.Authorization;
 
 namespace Veveve.Api.Tests.TestUtils;
 /// <summary>
@@ -66,16 +66,16 @@ public class CustomWebApplicationFactory<TStartup>
         {
             // Remove the app's ApplicationDbContext registration which happened during Startup.cs. Override it for testing.
             var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-            if(descriptor != null)
+            if (descriptor != null)
                 services.Remove(descriptor);
 
             var dbName = Guid.NewGuid().ToString();
-                // Add ApplicationDbContext using an in-memory database for testing.
-                services.AddDbContext<AppDbContext>(options =>
-                {
-                    options.UseInMemoryDatabase(dbName);
-                    options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)); // to avoid transaction errors
-                    });
+            // Add ApplicationDbContext using an in-memory database for testing.
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseInMemoryDatabase(dbName);
+                options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)); // to avoid transaction errors
+            });
 
             services.RemoveAll(typeof(ISendGridClientFacade));
             services.AddScoped<ISendGridClientFacade, STUB_SendGridClientFacade>();

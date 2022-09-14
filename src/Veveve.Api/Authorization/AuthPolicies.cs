@@ -1,4 +1,4 @@
-namespace Veveve.Domain.Authorization;
+namespace Veveve.Api.Authorization;
 
 public static class AuthPolicies
 {

@@ -4,10 +4,9 @@ using MediatR;
 using Veveve.Domain.Commands.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Veveve.Domain.Queries.Accounts;
-using Veveve.Domain.Authorization;
-using Veveve.Domain.Swagger;
-using Veveve.Domain.ErrorHandling;
 using Veveve.Domain.Exceptions;
+using Veveve.Api.Authorization;
+using Veveve.Api.Swagger;
 
 namespace Veveve.Api.Controllers.Accounts;
 

@@ -1,4 +1,4 @@
-using Veveve.Domain.Utils;
+using Veveve.Api.Utils;
 using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Controllers;

@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Veveve.Domain.Models.Options;
 
-namespace Veveve.Domain.Authorization;
+namespace Veveve.Api.Authorization;
 
 public interface IJwtTokenHelper
 {
@@ -19,12 +19,12 @@ public interface IJwtTokenHelper
 public class JwtTokenHelper : IJwtTokenHelper
 {
     private readonly ILogger<JwtTokenHelper> _logger;
-    private readonly AuthorizationSettings _authSettings;
+    private readonly AuthorizationOptions _authSettings;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public JwtTokenHelper(
         ILogger<JwtTokenHelper> logger,
-        IOptions<AuthorizationSettings> authSettings,
+        IOptions<AuthorizationOptions> authSettings,
         IHttpContextAccessor httpContextAccessor)
     {
         this._logger = logger;

@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 
-namespace Veveve.Domain.Swagger;
+namespace Veveve.Api.Swagger;
 
 public static class SwaggerExtensions
 {

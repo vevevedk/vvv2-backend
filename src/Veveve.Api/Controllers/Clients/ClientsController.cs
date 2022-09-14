@@ -4,9 +4,8 @@ using MediatR;
 using Veveve.Domain.Commands.Clients;
 using Microsoft.AspNetCore.Authorization;
 using Veveve.Domain.Queries.Clients;
-using Veveve.Domain.Authorization;
-using Veveve.Domain.Swagger;
-using Veveve.Domain.ErrorHandling;
+using Veveve.Api.Authorization;
+using Veveve.Api.Swagger;
 using Veveve.Domain.Exceptions;
 using Veveve.Domain.Database.Entities;
 
@@ -107,7 +106,7 @@ public class ClientsController : ControllerBase
         if (!userId.HasValue)
             throw new Exception("UserId is null but shouldn't be, because we are authenticated at this point");
 
-        
+
         (UserEntity user, ClientEntity targetClient) = await _mediator.Send(new AssumeClient.Command(userId.Value, id));
         var jwtToken = _jwtTokenHelper.GenerateJwtToken(user, targetClient);
         return Ok(new ClientAssumeResponse(jwtToken));

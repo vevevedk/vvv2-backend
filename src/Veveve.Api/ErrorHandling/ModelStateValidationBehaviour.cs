@@ -4,7 +4,7 @@ using System.Net.Mime;
 using System.Text.Json;
 using Veveve.Domain.Exceptions;
 
-namespace Veveve.Domain.ErrorHandling;
+namespace Veveve.Api.ErrorHandling;
 
 /// <summary>
 /// Catch invalid model states and format a proper response to the client

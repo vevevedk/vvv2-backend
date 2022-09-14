@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Veveve.Domain.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,30 +15,30 @@ public static class EnsureDefaultAdminUsers
     {
         private readonly IMediator _mediator;
         private readonly AppDbContext _dbContext;
-        private readonly Appsettings _appSettings;
+        private readonly DefaultAdminDataOptions _adminDataOptions;
 
         public Handler(
             IMediator mediator,
             AppDbContext dbContext,
-            IOptions<Appsettings> appSettings)
+            IOptions<DefaultAdminDataOptions> adminDataOptions)
         {
             _mediator = mediator;
             _dbContext = dbContext;
-            _appSettings = appSettings.Value;
+            _adminDataOptions = adminDataOptions.Value;
         }
 
         protected override async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Name == _appSettings.DefaultAdminClientName);
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Name == _adminDataOptions.DefaultAdminClientName);
             if (client == null)
             {
-                client = new ClientBuilder(_appSettings.DefaultAdminClientName);
+                client = new ClientBuilder(_adminDataOptions.DefaultAdminClientName);
                 _dbContext.Clients.Add(client);
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
 
             var existingUsers = await _dbContext.Users.Select(x => x.Email).ToListAsync();
-            foreach (var defaultAcc in _appSettings.DefaultAdminUsers)
+            foreach (var defaultAcc in _adminDataOptions.DefaultAdminUsers)
             {
                 if (!existingUsers.Contains(defaultAcc.Email, StringComparer.InvariantCultureIgnoreCase))
                     await _mediator.Send(new CreateUser.Command(client.Id, defaultAcc.FullName, defaultAcc.Email, true));

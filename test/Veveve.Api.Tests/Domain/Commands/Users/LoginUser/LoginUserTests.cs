@@ -1,4 +1,3 @@
-using Veveve.Domain.Authorization;
 using Veveve.Domain.Database;
 using Veveve.Domain.Database.Entities;
 using MediatR;
@@ -8,6 +7,7 @@ using Veveve.Domain.Database.Entities.Builders;
 using Veveve.Domain.Services;
 using Veveve.Domain.Commands.Users;
 using Veveve.Domain.Exceptions;
+using Veveve.Api.Authorization;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 

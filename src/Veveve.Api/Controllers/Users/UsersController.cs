@@ -4,9 +4,8 @@ using MediatR;
 using Veveve.Domain.Commands.Users;
 using Microsoft.AspNetCore.Authorization;
 using Veveve.Domain.Queries.Users;
-using Veveve.Domain.Authorization;
-using Veveve.Domain.Swagger;
-using Veveve.Domain.ErrorHandling;
+using Veveve.Api.Authorization;
+using Veveve.Api.Swagger;
 using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Controllers.Users;

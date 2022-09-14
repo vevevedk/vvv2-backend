@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Veveve.Domain;
+namespace Veveve.Api;
 
 public class DateTimeUtcConverter : JsonConverter<DateTime>
 {

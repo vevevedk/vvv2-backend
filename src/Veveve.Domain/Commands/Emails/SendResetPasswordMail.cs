@@ -16,12 +16,12 @@ public static class SendResetPasswordMail
     public class Handler : MediatR.AsyncRequestHandler<Command>
     {
         private readonly AppDbContext _dbContext;
-        private readonly SendGridSettings _sendgridSettings;
+        private readonly SendGridOptions _sendgridSettings;
         private readonly ISendGridClientFacade _sendgridClient;
 
         public Handler(
             AppDbContext dbContext,
-            IOptions<SendGridSettings> sendgridSettings,
+            IOptions<SendGridOptions> sendgridSettings,
             ISendGridClientFacade sendgridClient)
         {
             _dbContext = dbContext;

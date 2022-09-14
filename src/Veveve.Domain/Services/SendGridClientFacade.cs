@@ -11,11 +11,11 @@ public class SendGridClientFacade : ISendGridClientFacade
 {
     private readonly ILogger<SendGridClientFacade> _logger;
     private readonly ISendGridClient _sendGridClient;
-    private readonly SendGridSettings _sendGridSettings;
+    private readonly SendGridOptions _sendGridSettings;
 
     public SendGridClientFacade(
         ILogger<SendGridClientFacade> logger,
-        IOptions<SendGridSettings> sendGridSettings,
+        IOptions<SendGridOptions> sendGridSettings,
         ISendGridClient sendGridClient)
     {
         _logger = logger;

@@ -1,7 +1,7 @@
 using System.Net;
 using Veveve.Domain.Exceptions;
 
-namespace Veveve.Domain.Swagger;
+namespace Veveve.Api.Swagger;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
 public class SwaggerErrorCodesAttribute : Attribute

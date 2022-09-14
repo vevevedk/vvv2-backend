@@ -20,12 +20,12 @@ public class SendGridAuthorization : Attribute, IAsyncAuthorizationFilter
     /// </summary>
     private const string TIMESTAMP_HEADER = "X-Twilio-Email-Event-Webhook-Timestamp";
 
-    private SendGridSettings _sendgridSettings = null!;
+    private SendGridOptions _sendgridSettings = null!;
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
         context.HttpContext.Request.EnableBuffering(); // allows request body stream to be read multiple times.
 
-        _sendgridSettings = context.HttpContext.RequestServices.GetService<IOptions<SendGridSettings>>()!.Value;
+        _sendgridSettings = context.HttpContext.RequestServices.GetService<IOptions<SendGridOptions>>()!.Value;
         if (!await IsValidSignature(context.HttpContext.Request))
             context.Result = new UnauthorizedObjectResult(null);
     }
