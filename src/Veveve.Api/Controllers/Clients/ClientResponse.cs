@@ -1,4 +1,4 @@
-using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Domain.Database.Entities;
 
 namespace Veveve.Api.Controllers.Clients;
 

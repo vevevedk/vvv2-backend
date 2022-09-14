@@ -1,5 +1,5 @@
 ﻿
-using Veveve.Api.Domain.Services;
+using Veveve.Domain.Services;
 
 namespace Veveve.Api.Controllers.GoogleAds.SearchTerms
 {

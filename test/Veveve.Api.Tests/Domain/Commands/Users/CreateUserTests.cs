@@ -1,13 +1,13 @@
-using Veveve.Api.Domain.Commands.Users;
-using Veveve.Api.Domain.Commands.Emails;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Domain.Database;
+using Veveve.Domain.Database.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
-using Veveve.Api.Domain.Exceptions;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Commands.Users;
+using Veveve.Domain.Commands.Emails;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -23,7 +23,8 @@ public class CreateUserTests : TestBase
     }
 
     [Fact]
-    public async void CreateUser_ThrowsNotFoundException_WhenClientIdDoesntExist(){
+    public async void CreateUser_ThrowsNotFoundException_WhenClientIdDoesntExist()
+    {
         // Arrange
         var command = new CreateUser.Command(999, "Donald Trump", $"{Guid.NewGuid()}@gmail.com", false);
 

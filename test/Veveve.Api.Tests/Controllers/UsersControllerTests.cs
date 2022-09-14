@@ -1,14 +1,12 @@
 using Xunit;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using Veveve.Api.Tests.TestUtils;
-using System;
 using Veveve.Api.Controllers.Users;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Infrastructure.Database.Entities;
-using Veveve.Api.Domain.Services;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Domain.Database;
+using Veveve.Domain.Database.Entities;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Services;
 
 namespace Veveve.Api.Tests.Controllers;
 

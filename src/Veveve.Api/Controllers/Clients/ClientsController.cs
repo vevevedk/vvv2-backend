@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using MediatR;
-using Veveve.Api.Domain.Commands.Clients;
+using Veveve.Domain.Commands.Clients;
 using Microsoft.AspNetCore.Authorization;
-using Veveve.Api.Domain.Queries.Clients;
-using Veveve.Api.Infrastructure.Authorization;
-using Veveve.Api.Infrastructure.Swagger;
-using Veveve.Api.Infrastructure.ErrorHandling;
+using Veveve.Domain.Queries.Clients;
+using Veveve.Api.Authorization;
+using Veveve.Api.Swagger;
+using Veveve.Domain.Exceptions;
+using Veveve.Domain.Database.Entities;
 
 namespace Veveve.Api.Controllers.Clients;
 
@@ -101,7 +102,13 @@ public class ClientsController : ControllerBase
     [SwaggerErrorCodes(HttpStatusCode.NotFound, ErrorCodesEnum.CLIENT_ID_DOESNT_EXIST)]
     public async Task<ActionResult<ClientAssumeResponse>> AssumeClient([FromRoute] int id)
     {
-        var jwtToken = await _mediator.Send(new AssumeClient.Command(id));
+        var userId = _jwtTokenHelper.GetUserId();
+        if (!userId.HasValue)
+            throw new Exception("UserId is null but shouldn't be, because we are authenticated at this point");
+
+
+        (UserEntity user, ClientEntity targetClient) = await _mediator.Send(new AssumeClient.Command(userId.Value, id));
+        var jwtToken = _jwtTokenHelper.GenerateJwtToken(user, targetClient);
         return Ok(new ClientAssumeResponse(jwtToken));
     }
 }

@@ -1,5 +1,5 @@
 using System;
-using Veveve.Api.Infrastructure.Database;
+using Veveve.Domain.Database;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

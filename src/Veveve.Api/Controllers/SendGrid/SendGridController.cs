@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using MediatR;
-using Veveve.Api.Domain.Commands.Emails;
+using Veveve.Domain.Commands.Emails;
 
 namespace Veveve.Api.Controllers.SendGrid;
 
