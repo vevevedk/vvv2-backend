@@ -1,71 +1,74 @@
-﻿// using Google.Ads.Gax.Lib;
-// using Google.Ads.GoogleAds.Config;
-// using Google.Ads.GoogleAds.Lib;
-// using Google.Ads.GoogleAds.V11.Services;
-// using MediatR;
-// using Veveve.Domain.Services;
+using MediatR;
+using Veveve.Domain.Services;
 
-// namespace Veveve.Domain.Commands.GoogleAds;
+namespace Veveve.Domain.Commands.GoogleAds;
 
-// public static class GetSearchTerms
-// {
-//     public record Query(string CustomerId, int LookbackDays) : IRequest<PagedAsyncEnumerable<SearchGoogleAdsResponse, GoogleAdsRow>>;
+public static class GetSearchTerms
+{
+    public record Query(string CustomerId, int LookbackDays) : IRequest<IEnumerable<SearchTermsDto>>;
 
-//     public class Handler : IRequestHandler<Query, PagedAsyncEnumerable<SearchGoogleAdsResponse, GoogleAdsRow>>
-//     {
-//         private readonly AdsClient<GoogleAdsConfig> _client;
+    public class Handler : IRequestHandler<Query, IEnumerable<SearchTermsDto>>
+    {
+        private readonly IMediator _mediator;
 
-//         public Handler(IGoogleAdsClientFacade clientFacade,
-//         AdsClient<GoogleAdsConfig> client)
-//         {
-//             _client = client;
-//         }
+        public Handler(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
-//         public async Task<PagedAsyncEnumerable<SearchGoogleAdsResponse, GoogleAdsRow>> Handle(Query request, CancellationToken cancellationToken)
-//         {
-//             throw new NotImplementedException();
-//             #region sample code
-//             //try
-//             //{
-//             //    var castedClient = (GoogleAdsClient)_client;
-//             //    var today = DateTime.Today;
-//             //    var lookbackDate = today.AddDays(-lookbackDays);
-//             //    var query = @$"SELECT
-//             //                        search_term_view.search_term,
-//             //                        search_term_view.status,
-//             //                        ad_group.id,
-//             //                        ad_group.name,
-//             //                        campaign.id,
-//             //                        campaign.name,
-//             //                  metrics.impressions,
-//             //                  metrics.clicks,
-//             //                  metrics.cost,
-//             //                  metrics.conversions,
-//             //                  metricds.conversions_value
-//             //                    FROM search_term_view
-//             //                    WHERE campaign.status != \'REMOVED\'
-//             //                        AND ad_group.status != \'REMOVED\'
-//             //                        AND campaign.advertising_channel_type = \'SEARCH\'
-//             //                        AND ad_group.type = \'SEARCH_STANDARD\'
-//             //                        AND segments.date > '{lookbackDate.Date}'
-//             //                        AND segments.date <= '{today.Date}'";
+        public async Task<IEnumerable<SearchTermsDto>> Handle(Query request, CancellationToken cancellationToken)
+        {
+            var today = DateTime.Today.Date;
+            var lookbackDate = today.AddDays(-request.LookbackDays).Date;
+            var search_term_query = @$"SELECT
+                                search_term_view.search_term,
+                                search_term_view.status,
+                                ad_group.id,
+                                ad_group.name,
+                                campaign.id,
+                                campaign.name,
+                                metrics.impressions,
+                                metrics.clicks,
+                                metrics.conversions,
+                                metrics.conversions_value
+                            FROM search_term_view
+                            WHERE campaign.status != 'REMOVED'
+                                AND ad_group.status != 'REMOVED'
+                                AND campaign.advertising_channel_type = 'SEARCH'
+                                AND ad_group.type = 'SEARCH_STANDARD'
+                                AND segments.date > '{lookbackDate.ToString("yyyy-MM-dd")}'
+                                AND segments.date <= '{today.ToString("yyyy-MM-dd")}'
+                            ORDER BY metrics.clicks DESC
+                            LIMIT 100";
 
-//             //    var request = new SearchGoogleAdsRequest()
-//             //    {
-//             //        CustomerId = customerId,
-//             //        Query = query
-//             //    };
+            var dsa_search_term_query = $@"SELECT
+                                dynamic_search_ads_search_term_view.search_term,
+                                dynamic_search_ads_search_term_view.has_matching_keyword,
+                                ad_group.id,
+                                ad_group.name,
+                                campaign.id,
+                                campaign.name,
+                                metrics.impressions,
+                                metrics.clicks,
+                                metrics.conversions,
+                                metrics.conversions_value
+                            FROM dynamic_search_ads_search_term_view
+                            WHERE campaign.status != 'REMOVED'
+                                AND ad_group.status != 'REMOVED'
+                                AND segments.date > '{lookbackDate.ToString("yyyy-MM-dd")}'
+                                AND segments.date <= '{today.ToString("yyyy-MM-dd")}'
+                            ORDER BY metrics.clicks DESC
+                            LIMIT 100";
 
-//             //    var googleAdsService = castedClient.GetService(Google.Ads.GoogleAds.Services.V11.GoogleAdsService);
-//             //    return Task.FromResult(googleAdsService.SearchAsync(request: request));
+            var task1 = _mediator.Send(new GetSearchTermBaseQuery.Query(search_term_query, request.CustomerId));
+            var task2 = _mediator.Send(new GetSearchTermBaseQuery.Query(dsa_search_term_query, request.CustomerId));
 
-//             //}
-//             //catch (Exception ex)
-//             //{
-//             //    _logger.Log(LogLevel.Error, ex.Message);
-//             //    throw;
-//             //}
-//             #endregion
-//         }
-//     }
-// }
+            var result1 = await task1;
+            var result2 = await task2;
+
+            var result = result1.Concat(result2).OrderByDescending(x => x.Clicks).ToList();
+            return result;
+
+        }
+    }
+}
