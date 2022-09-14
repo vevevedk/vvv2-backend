@@ -29,7 +29,7 @@ public static class ModelStateValidationBehaviour
                 var result = new BadRequestObjectResult(errorResponse);
                 result.ContentTypes.Add(MediaTypeNames.Application.Json);
 
-                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ApiProgram>>();
                 logger.LogWarning("ModelStateValidationError {errorResponse}", JsonSerializer.Serialize(errorResponse));
 
                 return result;

@@ -10,11 +10,11 @@ using Veveve.Domain.Services;
 
 namespace Veveve.Api.Tests.Controllers;
 
-public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
+public class UsersControllerTests : IClassFixture<CustomWebApplicationFactory<ApiProgram>>
 {
-    private readonly CustomWebApplicationFactory<Program> _factory;
+    private readonly CustomWebApplicationFactory<ApiProgram> _factory;
 
-    public UsersControllerTests(CustomWebApplicationFactory<Program> factory)
+    public UsersControllerTests(CustomWebApplicationFactory<ApiProgram> factory)
     {
         _factory = factory;
     }

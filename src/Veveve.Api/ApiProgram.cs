@@ -15,7 +15,6 @@ using Veveve.Domain.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// init serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Default", LogEventLevel.Information)
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -73,4 +72,4 @@ app.MapControllers();
 app.Run();
 
 // this is necessary for the test project to access Program
-public partial class Program { }
+public partial class ApiProgram { }
