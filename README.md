@@ -25,7 +25,7 @@ Hosted at:
 ### Prerequisites
 - .Net SDK 6
 - SendGrid account
-- Database connection (SQL Server or LocalDb)
+- Database connection (PostGreSQL)
 
 ### Configuration
 Configurations are contained within the appsettings.json file.
@@ -38,14 +38,11 @@ Using VS Code, a gitignored launch.json file can have a configuration containing
 ```
 "env": {
     "ASPNETCORE_ENVIRONMENT": "Development",
-    "ConnectionStrings:DbConnection": "{myConnectionString}",
-    "SendGrid:ApiKey": "{myApiKey}";
-    "Authorization:JwtKey": "{myJwtKey}"
+    ...
 }
 ```
 
-The above env variables are required to run the project as of writing this.
-It is also required to configure the SendGrid section in appsettings.json with template ids and stuff.
+It is required to go through the appsettings.json file for missing secrets and stuff and add them as env variables as above.
 
 ### Entity Framework
 Migrations are applied when the application starts and should generally not be applied manually using the command line.
@@ -55,8 +52,7 @@ While you are working with a new database scheme you should **not** connect to t
 because you might accidentally apply migrations to the database.
 It should instead point at a local database running on your machine.
 
-I use the following connection string to point at a locally running LocalDb, which can be installed as part of the SQL Server Express installation. `Server=(localdb)\\MSSQLLocalDB;Initial Catalog=Veveve-local;Integrated Security=true"`
-Connect to the local database in SSMS using server name: (LocalDB)\MSSQLLocalDB.
+I use the following connection string to point at a local postgresql db `ConnectionStrings:DbConnection": "Host=localhost;Database=veveve-local;Username=postgres;Password=developer"`.
 
 Install the EF global tool:
 ```sh
