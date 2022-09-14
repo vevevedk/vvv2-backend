@@ -37,7 +37,7 @@ public class SearchTermsController : ControllerBase
     [Authorize]
     public async Task<ActionResult<IEnumerable<SearchTermResponse>>> GetSearchTerms([FromQuery] GetSearchTermRequest request)
     {
-        var searchTerms = await _mediator.Send(new GetSearchTermsDynamicSearchAds.Query(request.GoogleAdsCustomerId, request.LookbackDays));
+        var searchTerms = await _mediator.Send(new GetSearchTerms.Query(request.GoogleAdsCustomerId, request.LookbackDays));
         return Ok(searchTerms.Select(dto => new SearchTermResponse(dto)));
     }
 }
