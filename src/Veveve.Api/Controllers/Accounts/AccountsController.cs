@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using MediatR;
-using Veveve.Api.Domain.Commands.Accounts;
+using Veveve.Domain.Commands.Accounts;
 using Microsoft.AspNetCore.Authorization;
-using Veveve.Api.Domain.Queries.Accounts;
-using Veveve.Api.Infrastructure.Authorization;
-using Veveve.Api.Infrastructure.Swagger;
-using Veveve.Api.Infrastructure.ErrorHandling;
+using Veveve.Domain.Queries.Accounts;
+using Veveve.Domain.Authorization;
+using Veveve.Domain.Swagger;
+using Veveve.Domain.ErrorHandling;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Controllers.Accounts;
 

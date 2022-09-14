@@ -1,18 +1,15 @@
-using System;
-using System.Net.Http;
 using Veveve.Api.Tests.TestUtils.Stubs;
-using Veveve.Api.Infrastructure.Database.Entities;
-using Veveve.Api.Domain.Services;
+using Veveve.Domain.Database.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Veveve.Api.Infrastructure.Authorization;
-using Veveve.Api.Infrastructure.Database;
+using Veveve.Domain.Authorization;
+using Veveve.Domain.Database;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Linq;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Services;
 
 namespace Veveve.Api.Tests.TestUtils;
 /// <summary>

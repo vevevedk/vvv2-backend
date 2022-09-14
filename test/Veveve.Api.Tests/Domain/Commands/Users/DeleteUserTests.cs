@@ -1,12 +1,11 @@
-using Veveve.Api.Domain.Commands.Users;
-using Veveve.Api.Domain.Exceptions;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Domain.Database;
+using Veveve.Domain.Database.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using NSubstitute;
 using Xunit;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Commands.Users;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 

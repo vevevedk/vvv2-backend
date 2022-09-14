@@ -3,8 +3,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Veveve.Domain.Models.Options;
 
-namespace Veveve.Api.Infrastructure.Authorization;
+namespace Veveve.Domain.Authorization;
 
 public static class AuthenticationExtensions
 {
@@ -37,9 +38,9 @@ public static class AuthenticationExtensions
         });
         services.AddAuthorization(options =>
         {
-            options.AddPolicy(AuthPolicies.Admin, policy => 
-                policy.RequireAssertion(context => 
-                    context.User.HasClaim(c => 
+            options.AddPolicy(AuthPolicies.Admin, policy =>
+                policy.RequireAssertion(context =>
+                    context.User.HasClaim(c =>
                         c.Type == CustomClaimTypes.IsAdmin)));
         });
         return services;

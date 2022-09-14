@@ -1,11 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Domain.Database.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using Veveve.Domain.Models.Options;
 
-namespace Veveve.Api.Infrastructure.Authorization;
+namespace Veveve.Domain.Authorization;
 
 public interface IJwtTokenHelper
 {
@@ -72,7 +73,7 @@ public class JwtTokenHelper : IJwtTokenHelper
             {CustomClaimTypes.UserId, User.Id},
             {CustomClaimTypes.ClientId, overrideClient?.Id ?? User.Client.Id},
             {CustomClaimTypes.ClientName, overrideClient?.Name ?? User.Client.Name},
-            
+
         };
         if (User.HasAdminClaim())
             claims.Add(CustomClaimTypes.IsAdmin, true);

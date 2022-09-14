@@ -1,9 +1,9 @@
 using Veveve.Api.Controllers;
-using Veveve.Api.Infrastructure.Utils;
+using Veveve.Domain.Utils;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Veveve.Api.Infrastructure.Swagger
+namespace Veveve.Domain.Swagger
 {
     /// <summary>
     /// Add a list of all possible error codes for an endpoint along with descriptions

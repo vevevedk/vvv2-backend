@@ -1,5 +1,5 @@
-using Veveve.Api.Infrastructure.ErrorHandling;
-using Veveve.Api.Infrastructure.Utils;
+using Veveve.Domain.Utils;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Controllers;
 

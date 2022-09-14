@@ -1,12 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using EllipticCurve;
-using System.IO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+using Veveve.Domain.Models.Options;
 
 namespace Veveve.Api.Controllers.SendGrid;
 

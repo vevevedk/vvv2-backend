@@ -2,8 +2,9 @@ using Veveve.Api.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using System.Text.Json;
+using Veveve.Domain.Exceptions;
 
-namespace Veveve.Api.Infrastructure.ErrorHandling;
+namespace Veveve.Domain.ErrorHandling;
 
 /// <summary>
 /// Catch invalid model states and format a proper response to the client
@@ -33,7 +34,7 @@ public static class ModelStateValidationBehaviour
 
                 return result;
             };
-                // necessary to disable the defualt ProblemDetails model in Swagger
-                options.SuppressMapClientErrors = true;
+            // necessary to disable the defualt ProblemDetails model in Swagger
+            options.SuppressMapClientErrors = true;
         });
 }

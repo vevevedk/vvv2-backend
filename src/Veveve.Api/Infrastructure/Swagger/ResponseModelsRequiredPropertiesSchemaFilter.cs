@@ -2,7 +2,7 @@ using Veveve.Api.Controllers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Veveve.Api.Infrastructure.Swagger
+namespace Veveve.Domain.Swagger
 {
     /// <summary>
     /// Mark all properties in our response models as required.

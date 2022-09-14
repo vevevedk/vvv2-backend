@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using MediatR;
-using Veveve.Api.Domain.Commands.Users;
+using Veveve.Domain.Commands.Users;
 using Microsoft.AspNetCore.Authorization;
-using Veveve.Api.Domain.Queries.Users;
-using Veveve.Api.Infrastructure.Authorization;
-using Veveve.Api.Infrastructure.Swagger;
-using Veveve.Api.Infrastructure.ErrorHandling;
-using Veveve.Api.Domain.Exceptions;
+using Veveve.Domain.Queries.Users;
+using Veveve.Domain.Authorization;
+using Veveve.Domain.Swagger;
+using Veveve.Domain.ErrorHandling;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Controllers.Users;
 
@@ -103,8 +103,9 @@ public class UsersController : ControllerBase
     [SwaggerErrorCodes(HttpStatusCode.UnprocessableEntity, ErrorCodesEnum.USER_LOGIN_EMAIL_OR_PASSWORD_INVALID)]
     public async Task<ActionResult<LoginResponse>> LoginUser([FromBody] LoginUserRequest body)
     {
-        var loginResult = await _mediator.Send(new LoginUser.Command(body.Email, body.Password));
-        return Ok(new LoginResponse(loginResult.JwtToken, loginResult.User));
+        var loggedInUser = await _mediator.Send(new LoginUser.Command(body.Email, body.Password));
+        var jwtToken = _jwtTokenHelper.GenerateJwtToken(loggedInUser);
+        return Ok(new LoginResponse(jwtToken, loggedInUser));
     }
 
     /// <summary>

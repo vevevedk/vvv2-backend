@@ -1,14 +1,13 @@
-using Veveve.Api.Domain.Commands.Users;
-using Veveve.Api.Domain.Exceptions;
-using Veveve.Api.Domain.Services;
-using Veveve.Api.Infrastructure.Authorization;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Infrastructure.Database.Entities;
-using Veveve.Api.Infrastructure.ErrorHandling;
+using Veveve.Domain.Authorization;
+using Veveve.Domain.Database;
+using Veveve.Domain.Database.Entities;
 using MediatR;
 using NSubstitute;
 using Xunit;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Services;
+using Veveve.Domain.Commands.Users;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -16,13 +15,13 @@ public class LoginUserTests : TestBase
 {
     private readonly PasswordService _passwordService;
     private readonly IJwtTokenHelper _mockJwtTokenHelper;
-    private IRequestHandler<LoginUser.Command, LoginUserResult> _sut;
+    private IRequestHandler<LoginUser.Command, UserEntity> _sut;
 
     public LoginUserTests()
     {
         _passwordService = new PasswordService();
         _mockJwtTokenHelper = Substitute.For<IJwtTokenHelper>();
-        _sut = new LoginUser.Handler(new AppDbContext(_dbOptions), _passwordService, _mockJwtTokenHelper);
+        _sut = new LoginUser.Handler(new AppDbContext(_dbOptions), _passwordService);
     }
 
     [Fact]
@@ -83,7 +82,7 @@ public class LoginUserTests : TestBase
     }
 
     [Fact]
-    public async void Loginuser_ReturnsJwtToken_WhenSuccesful()
+    public async void Loginuser_ReturnsUser_WhenSuccesful()
     {
         // Arrange
         var command = new LoginUser.Command("asdasd@gmail.com", "somepass");
@@ -101,6 +100,6 @@ public class LoginUserTests : TestBase
         var result = await _sut.Handle(command, default);
 
         // Assert
-        Assert.NotNull(result.JwtToken);
+        Assert.NotNull(result);
     }
 }

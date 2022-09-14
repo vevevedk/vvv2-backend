@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Veveve.Api.Infrastructure.Utils;
+namespace Veveve.Domain.Utils;
 
 public static class EnumExtensions
 {

@@ -1,14 +1,13 @@
-using System.Threading;
-using Veveve.Api.Domain.Commands.Users;
-using Veveve.Api.Domain.Commands.Emails;
-using Veveve.Api.Domain.Exceptions;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Domain.Database;
+using Veveve.Domain.Database.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Commands.Users;
+using Veveve.Domain.Commands.Emails;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -44,7 +43,7 @@ public class ResetUserPasswordTests : TestBase
         // Arrange
         var email = "jhlk@asd.com";
         var command = new ResetUserPassword.Command(email);
-        
+
         using (var context = new AppDbContext(_dbOptions))
         {
             var newAcc = new UserBuilder("asdasd", email)
@@ -52,7 +51,7 @@ public class ResetUserPasswordTests : TestBase
                 .WithClaim(ClaimTypeEnum.User)
                 .Build();
             context.Users.Add(newAcc);
-                await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             Assert.Null(newAcc.ResetPasswordToken);
         }
 

@@ -1,14 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Veveve.Api.Domain.Exceptions;
-using System;
+using Veveve.Domain.Exceptions;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Veveve.Api.Controllers;
-using Veveve.Api.Infrastructure.ErrorHandling;
 
-namespace Veveve.Api.Infrastructure.Middleware;
+namespace Veveve.Domain.Middleware;
 
 /// <summary>
 /// middleware to catch exceptions and format the api response.
@@ -42,7 +37,7 @@ public class ExceptionMiddleware
         var errorCode = ErrorCodesEnum.GENERIC_INTERNAL;
         var messageParams = new string[0];
 
-        
+
         if (exception is NotFoundException nfEx)
         {
             httpStatusCode = HttpStatusCode.NotFound;
@@ -64,7 +59,7 @@ public class ExceptionMiddleware
             errorCode = brEx.ErrorCode;
         }
 
-        if(exception is BusinessRuleException brEx2)
+        if (exception is BusinessRuleException brEx2)
             messageParams = brEx2.MessageParams;
 
         var errorResponse = new ApiErrorResponse(errorCode, messageParams);

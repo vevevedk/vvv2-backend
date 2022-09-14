@@ -1,14 +1,13 @@
-using System;
-using Veveve.Api.Domain.Commands.Users;
-using Veveve.Api.Domain.Exceptions;
-using Veveve.Api.Domain.Services;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Infrastructure.Database.Entities;
+using Veveve.Domain.Database;
+using Veveve.Domain.Database.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Xunit;
-using Veveve.Api.Infrastructure.Database.Entities.Builders;
+using Veveve.Domain.Database.Entities.Builders;
+using Veveve.Domain.Services;
+using Veveve.Domain.Commands.Users;
+using Veveve.Domain.Exceptions;
 
 namespace Veveve.Api.Tests.Domain.Commands.Users;
 
@@ -54,7 +53,7 @@ public class UpdateUserPasswordTests : TestBase
             await context.SaveChangesAsync();
         }
 
-        var pwDto = new PasswordDto("somehash", new byte[] { 0x20, 0x20});
+        var pwDto = new PasswordDto("somehash", new byte[] { 0x20, 0x20 });
         _mockPasswordService.EncryptPassword(password).Returns(pwDto);
 
         var command = new UpdateUserPassword.Command(pwToken, password);

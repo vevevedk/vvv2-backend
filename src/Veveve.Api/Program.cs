@@ -1,23 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using MediatR;
-using Veveve.Api.Domain.Commands.Users;
-using Veveve.Api.Infrastructure.Database;
-using Veveve.Api.Domain.Services;
+using Veveve.Domain.Commands.Users;
+using Veveve.Domain.Database;
+using Veveve.Domain.Services;
 using SendGrid;
-using Veveve.Api.Infrastructure.Authorization;
-using Veveve.Api.Infrastructure;
+using Veveve.Domain.Authorization;
+using Veveve.Domain;
 using System.Text.Json.Serialization;
-using Veveve.Api.Infrastructure.ErrorHandling;
-using Veveve.Api.Infrastructure.Middleware;
+using Veveve.Domain.ErrorHandling;
+using Veveve.Domain.Middleware;
 using Veveve.Api;
-using Veveve.Api.Infrastructure.Swagger;
+using Veveve.Domain.Swagger;
 using Serilog;
 using Serilog.Events;
-using Veveve.Api.Domain.PipelineBehaviours;
+using Veveve.Domain.PipelineBehaviours;
 using Google.Ads.GoogleAds.Lib;
 using Google.Ads.Gax.Lib;
 using Google.Ads.GoogleAds.Config;
 using Google.Ads.Gax.Config;
+using Veveve.Domain.Models.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var appsettings = builder.Configuration.Get<Appsettings>();
@@ -65,7 +66,7 @@ builder.Services.AddScoped<AdsClient<GoogleAdsConfig>, GoogleAdsClient>(serviceP
 // ====== Google Ads Client Setup ======
 
 builder.Services.AddScoped<IJwtTokenHelper, JwtTokenHelper>();
-builder.Services.AddMediatR(typeof(Veveve.Api.Infrastructure.Database.AppDbContext).Assembly); // use any type from Veveve.Api
+builder.Services.AddMediatR(typeof(Veveve.Domain.Database.AppDbContext).Assembly); // use any type from Veveve.Api
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 builder.Services.AddDbContext<AppDbContext>(opts =>
 {
