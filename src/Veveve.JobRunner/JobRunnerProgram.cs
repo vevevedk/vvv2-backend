@@ -30,6 +30,7 @@ public class JobRunnerProgram : BackgroundService
 {
     private readonly IMediator _mediator;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly int _milliSecondsToWait = 5000;
 
     // we need to start a new scope for each iteration of the background service
     public JobRunnerProgram(IMediator mediator, IServiceScopeFactory scopeFactory)
@@ -47,9 +48,9 @@ public class JobRunnerProgram : BackgroundService
             using var scope = _scopeFactory.CreateAsyncScope();
             var schedulerService = scope.ServiceProvider.GetRequiredService<IJobRunnerService>();
 
-            await schedulerService.DoStuff();
+            await schedulerService.ProcessQueue();
 
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(_milliSecondsToWait, stoppingToken);
         }
     }
 }
