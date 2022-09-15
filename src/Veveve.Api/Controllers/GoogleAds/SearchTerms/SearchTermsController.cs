@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Veveve.Api.Authorization;
-using Veveve.Domain.Commands.GoogleAds;
+using Veveve.Domain.Queries.GoogleAds.SearchTerms;
 using Veveve.Api.Controllers.GoogleAds.SearchTerms;
 using Veveve.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;

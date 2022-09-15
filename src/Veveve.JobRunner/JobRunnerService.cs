@@ -18,6 +18,6 @@ public class JobRunnerService : IJobRunnerService
 
     public async Task DoStuff()
     {
-        // _mediator.Send(new DoStuffCommand());
+        // foobar
     }
 }

@@ -5,7 +5,7 @@ using Google.Ads.GoogleAds.V11.Services;
 using MediatR;
 using Veveve.Domain.Services;
 
-namespace Veveve.Domain.Commands.GoogleAds;
+namespace Veveve.Domain.Queries.GoogleAds.SearchTerms;
 
 public static class GetSearchTermBaseQuery
 {
