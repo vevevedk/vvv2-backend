@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
     public DbSet<ClientEntity> Clients => Set<ClientEntity>();
     public DbSet<UserClaimEntity> UserClaims => Set<UserClaimEntity>();
     public DbSet<EmailLogEntity> EmailLogs => Set<EmailLogEntity>();
+    public DbSet<QueueEntity> Queues => Set<QueueEntity>();
+    public DbSet<JobErrorEntity> JobErrors => Set<JobErrorEntity>();
 
     public override int SaveChanges() => SaveChangesAsync().Result;
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -48,5 +50,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<AccountEntity>().HasIndex(b => b.GoogleAdsAccountId).IsUnique();
         modelBuilder.Entity<ClientEntity>().HasIndex(b => b.Name).IsUnique();
         modelBuilder.Entity<EmailLogEntity>().HasIndex(b => b.Reference).IsUnique();
+        modelBuilder.Entity<QueueEntity>().HasIndex(b => b.Client.Id);
     }
 }
