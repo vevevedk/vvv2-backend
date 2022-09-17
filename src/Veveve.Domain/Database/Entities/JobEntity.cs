@@ -2,9 +2,9 @@
 
 namespace Veveve.Domain.Database.Entities
 {
-    public class JobQueueEntity : BaseEntity
+    public class JobEntity : BaseEntity
     {
-        public JobQueueEntity()
+        public JobEntity()
         {
             // Intentionally Empty
         }
