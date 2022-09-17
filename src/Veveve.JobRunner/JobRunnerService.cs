@@ -1,7 +1,10 @@
 ﻿
 
+using System.Text.Json;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Veveve.Domain.Database;
+using Veveve.Domain.Models.Jobs;
 
 public interface IJobRunnerService
 {
@@ -21,11 +24,19 @@ public class JobRunnerService : IJobRunnerService
 
     public async Task ProcessQueue()
     {
-        var queue = _dbContext.Queues.Where(x => x.JobStatus == JobStatusEnum.Pending).ToList();
-        foreach(var queueItem in queue)
+        var queue = await _dbContext.JobQueue.Where(x => x.JobStatus == JobStatusEnum.Pending).ToListAsync();
+        foreach (var queueItem in queue)
         {
-            // TODO Flip based on FeatureName. Perhaps as an Enum? Seems better.
-            //await _mediator.Send(queueItem);
+            switch (queueItem.FeatureName)
+            {
+                case JobFeatureNameEnum.CreateNegativeKeywords:
+                    var body = JsonSerializer.Deserialize<CreateNegativeKeywordsJobModel>(queueItem.Body);
+                    // await _mediator.Send(new CreateNegativeKeywordsCommand(queueItem.ClientId, body.GoogleAdsAccountId, body.Keywords));
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

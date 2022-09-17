@@ -28,14 +28,12 @@ await host.RunAsync();
 
 public class JobRunnerProgram : BackgroundService
 {
-    private readonly IMediator _mediator;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly int _milliSecondsToWait = 5000;
 
     // we need to start a new scope for each iteration of the background service
-    public JobRunnerProgram(IMediator mediator, IServiceScopeFactory scopeFactory)
+    public JobRunnerProgram(IServiceScopeFactory scopeFactory)
     {
-        _mediator = mediator;
         _scopeFactory = scopeFactory;
     }
 

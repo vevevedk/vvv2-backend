@@ -62,8 +62,7 @@ dotnet tool install --global dotnet-ef
 To add new migrations
 
 ```sh
-cd ./src/Veveve.Api/
-dotnet ef migrations add MyMigrationName -o ./Infrastructure/Database/Migrations
+dotnet ef migrations Add AddJobQueueEntity --project ./src/Veveve.Domain/
 ```
 
 ### Run the app
@@ -89,16 +88,5 @@ The same command should be run as part of the deploy pipeline. Nothing should be
 
 ### Deployment & hosting
 
-The application is currently hosted at Simply.com.
-We use github actions as CI/CD tool. Upon pushing to the Dev branch, any changes will be deployed to our Test server.
-In the csproj file the following applies to the Debug configuration:
-
-```xml
-<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
-    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-</PropertyGroup>
-```
-
-This enables running multiples applications in the IIS app-pool on the server.
-The main application runs In-process and all others run Out-of-process.
+The application is currently hosted at DigitalOcean
+We use their built-in CI/CD to deploy our codebase from Github
