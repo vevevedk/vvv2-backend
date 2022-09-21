@@ -23,7 +23,7 @@ public class JobsController : ControllerBase
         _jwtTokenHelper = jwtTokenHelper;
     }
 
-    [HttpPost(Name = nameof(GetJobs))]
+    [HttpGet(Name = nameof(GetJobs))]
     [Produces("application/json")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [Authorize]
