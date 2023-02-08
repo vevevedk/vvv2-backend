@@ -30,7 +30,8 @@ public static class GetSearchTerms
                                 metrics.impressions,
                                 metrics.clicks,
                                 metrics.conversions,
-                                metrics.conversions_value
+                                metrics.conversions_value,
+                                metrics.cost_micros
                             FROM search_term_view
                             WHERE campaign.status != 'REMOVED'
                                 AND ad_group.status != 'REMOVED'
@@ -51,7 +52,8 @@ public static class GetSearchTerms
                                 metrics.impressions,
                                 metrics.clicks,
                                 metrics.conversions,
-                                metrics.conversions_value
+                                metrics.conversions_value,
+                                metrics.cost_micros
                             FROM dynamic_search_ads_search_term_view
                             WHERE campaign.status != 'REMOVED'
                                 AND ad_group.status != 'REMOVED'

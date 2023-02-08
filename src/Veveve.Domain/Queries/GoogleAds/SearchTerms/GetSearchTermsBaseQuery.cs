@@ -45,6 +45,7 @@ public static class GetSearchTermBaseQuery
                 dto.CampaignId = row.Campaign.Id.ToString();
                 dto.ConversionValue = row.Metrics.ConversionsValue;
                 dto.Conversions = row.Metrics.Conversions;
+                dto.CostMicros = row.Metrics.CostMicros;
                 if (request.GaQuery.Contains("FROM dynamic_search_ads_search_term_view"))
                 {
                     dto.SearchTerm = row.DynamicSearchAdsSearchTermView.SearchTerm;

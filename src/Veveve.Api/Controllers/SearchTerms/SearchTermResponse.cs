@@ -16,6 +16,7 @@ public class SearchTermResponse : BaseResponse
         ConversionValue = model.ConversionValue;
         CampaignId = model.CampaignId;
         AdGroupId = model.AdGroupId;
+        CostMicros = model.CostMicros;
     }
     public string CampaignId { get; set; } = null!;
     public string CampaignName { get; set; } = null!;
@@ -26,4 +27,5 @@ public class SearchTermResponse : BaseResponse
     public long Clicks { get; set; }
     public double Conversions { get; set; }
     public double ConversionValue { get; set; }
+    public long CostMicros { get; set; }
 }

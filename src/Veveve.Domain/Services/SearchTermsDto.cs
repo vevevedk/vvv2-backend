@@ -11,6 +11,7 @@
         public long Clicks { get; set; }
         public double Conversions { get; set; }
         public double ConversionValue { get; set; }
+        public long CostMicros { get; internal set; }
         //Cut for now
         //public string CriterionId { get; set; } = null!;
         //Cut for now
